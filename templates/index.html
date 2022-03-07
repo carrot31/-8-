@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>어디까지 들어봤니?</title>
+
+    <style>
+        ul {
+            list-style:none;
+        }
+
+        .header {
+            width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .inner > h1 {
+            text-align: center;
+            margin:130px 0 80px 0;
+        }
+
+        .searchBar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .musicListList {
+            text-align: center;
+        }
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+    function addMusicList() {
+         let musicKeyWord = $('#songinfo').val()
+        $.ajax({
+            type: 'GET',
+            url: 'http://ws.audioscrobbler.com/2.0/?method=track.search&track='+musicKeyWord+'&api_key=b429bcd64a8e5b0e1499635907f62f0f&format=json',
+            success: function (response) {
+                alert("검색완료!")
+
+                 let musicList = response["results"]["trackmatches"]["track"];
+                 for (let i = 0; i < musicList.length; i++) {
+                //     let albumImg = musicList[i]["image"][0]["#text"]
+                     let albumTitle = musicList[i]["name"]
+                     let albumArtist = musicList[i]["artist"]
+                     getMusicHtml(albumTitle, albumArtist)
+                 }
+            }
+        })
+    }
+
+    function getMusicHtml(title, artist) {
+        let musicHtml = ` <ul class="musicList">
+            <li class="title">${title}</li>
+            <li class="artist">${artist}</li>
+        </ul>`
+        $('.musicListList').append(musicHtml)
+    }
+
+
+</script>
+
+</head>
+
+<body>
+<header>
+    <div class="header">
+        <div class="inner">
+            <h1>어디까지 들어봤니?</h1>
+        </div>
+
+    </div>
+</header>
+<div class="searchBar">
+    <form action="methods">
+        <p><label for="songinfo">검색하기</label></p>
+        <input type="text" id="songinfo" class="whatToSearch" placeholder="Search">
+        <button type="button" onclick="addMusicList()">검색</button>
+    </form>
+</div>
+<div class="musicListList">
+    <ul class="musicList">
+        <!-- <li class="title">GEE</li>-->
+        <!-- <li class="artist">소녀시대</li>-->
+    </ul>
+</div>
+
+</body>
+</html>
