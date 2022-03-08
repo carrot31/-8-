@@ -10,16 +10,13 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
 app = Flask(__name__)
 
 client = MongoClient(os.environ.get("MONGO_DB_KEY"))
 db = client.dbsparta
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
-
 API_KEY = os.environ.get("API_KEY")
-
 BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
 @app.route('/')
@@ -28,8 +25,8 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.user.find_one({"id": payload['id']})
-        # return render_template('index.html', nickname=user_info["nick"])
-        return redirect(url_for("main", nickname=user_info["nick"]))
+        return render_template('index.html', nickname=user_info["nick"])
+        # return redirect(url_for("main", nickname=user_info["nick"]))
     except jwt.ExpiredSignatureError:
         return render_template('index.html', nickname="anon")
     except jwt.exceptions.DecodeError:
@@ -38,24 +35,47 @@ def home():
 # 페이지 렌더링
 @app.route('/main')
 def main():
+
+    # 처음 보여줄 컨텐츠를 담은 api 주소 ( top artist )
+    LAST_URL = "?method=chart.gettopartists&api_key=" + API_KEY + "&format=json"
+
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.user.find_one({"id": payload['id']})
 
-        keyword = "소녀시대"
-
-        r = requests.get(BASE_URL+"?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
+        r = requests.get(BASE_URL + LAST_URL)
         response = r.json()
-        albums = response["topalbums"]["album"]
 
-        print(albums[0]['image'][2])
+        top_artist = response['artists']['artist']
 
-        return render_template('main.html', albums=albums)
+        return render_template('main.html', nickname=user_info["nick"], artist=top_artist)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+# 검색
+@app.route('/main/<keyword>')
+def searchMain(keyword):
+    r = requests.get(BASE_URL + "?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
+    response = r.json()
+    albums = response["topalbums"]["album"]
+    return render_template('main.html', keyword=keyword, albums=albums)
+
+# 앨범의 상세정보
+
+@app.route('/detail/<artist>/<album>')
+def detail(artist, album):
+
+    LAST_URL = "?method=album.getinfo&artist=" + artist + "&album=" + album + "&api_key=" + API_KEY + "&format=json"
+
+    r = requests.get(BASE_URL + LAST_URL)
+    response = r.json()
+    res_album = response["album"]
+    print(res_album)
+
+    return render_template('detail.html', album=res_album, a_name=album)
 
 @app.route('/login')
 def login():
@@ -100,7 +120,7 @@ def api_login():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-    result = db.user.find_one({'id': id_receive, 'pw': pw_hash })
+    result = db.user.find_one({'id': id_receive, 'pw': pw_hash})
 
     if result is not None:
         payload = {

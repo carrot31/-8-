@@ -1,0 +1,52 @@
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+.header_nav {
+    width: 100%;
+    height: 15%;
+
+    background-image: url("/static/public/header.jpg");
+    background-position: center;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.brand_logo {
+    margin-left: 10px;
+    margin-right: 30px;
+}
+
+.detail_search {
+    outline: none;
+    border: none;
+
+    max-width: 500px;
+    width: 35%;
+    margin-top: 8px;
+
+    padding: 10px 10px 10px 30px;
+    border-radius: 20px;
+    box-shadow: gray 1px 3px 3px;
+
+    font-size: 18px;
+
+}
+
+.detail_btn {
+    width: 80px;
+    position: relative;
+    left: -80px;
+    outline: none;
+    border: none;
+}
+
+.detail_content {
+    margin: 30px auto;
+}

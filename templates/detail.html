@@ -9,6 +9,7 @@
 
     <!--  font -->
     <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
 
     <!--    JQuery -->
     <script src="/static/js/jquery-3.6.0.min.js"></script>
@@ -18,10 +19,91 @@
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
 
+    <!--    Custom -->
+    <link rel="stylesheet" href="/static/css/detail.css">
+
+    <script>
+
+    </script>
+
 </head>
 <body>
-    <div class="container">
-        <h1>메인에서 카드 클릭시 들어와지는 상세 페이지</h1>
+
+    {# 헤더 #}
+    <div class="header_nav">
+        <div class="flex-column brand_logo" onclick="location.href='/main'">
+            <h1>어디까지</h1>
+            <h1>들어봄?</h1>
+        </div>
+        <input class="detail_search" type="text" placeholder="Search...">
+        <button class="btn btn-dark-outline detail_btn" onclick="">검색</button>
     </div>
+
+{#    컨텐츠 #}
+    <div class="detail_content container" style="background-color: tomato">
+        <div class="flex-row">
+            <div class="flex-column">
+                <img src={{ album["image"][3]["#text"] }}
+            </div>
+            <div class="info_box flex-column">
+                <div class="flex-row">
+                    <h2>{{ a_name }}</h2>
+                </div>
+                <div class="flex-row">
+                    <h3>{{ album["artist"] }}</h3>
+                </div>
+
+                <div class="flex-row">
+                    {{ album["mbid"] }}
+                </div>
+                <div class="flex-row">
+                {% for tag in album["tags"]["tag"] %}
+                    <a href="{{ tag["url"] }}">#{{ tag["name"] }}</a>&nbsp;
+                {% endfor %}
+                </div>
+            </div>
+            </div>
+            {% if album["tracks"] %}
+            <div class="track_list">
+                <table class="table table-responsive">
+                    {% set count = 1 %}
+                    {% for track in album["tracks"]["track"] %}
+                        {% set track_name = track["name"] %}
+                        <tr>
+                            <td>{{ count }}</td>
+                            <td>{{ track_name }}</td>
+                            <td>여백의 미</td>
+                        </tr>
+                        {% set count = count + 1 %}
+                    {% endfor %}
+                </table>
+            </div>
+
+            {% else %}
+            <div class="exception_view">
+                <h4>API 에러</h4>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container" style="background-color: #5c636a">
+        <h3>코멘트</h3>
+        <table class="table">
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+            </tr>
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+            </tr>
+        </table>
+        <div class="flex-row">
+            <input type="text">
+            <button>작성</button>
+        </div>
+    </div>
+
 </body>
 </html>

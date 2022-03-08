@@ -19,107 +19,130 @@
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
 
-    <!--    Custom -->
-    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+
+
+    <script>
+
+        function search() {
+            const search = $('#find-keyword').val()
+            console.log(search)
+            if (search === "") return;
+            $('#albums_box').empty()
+            location.href = `/main/${search}`
+        }
+
+        function logout() {
+            $.removeCookie('mytoken');
+            alert('로그아웃!')
+            window.location.href = '/login'
+        }
+    </script>
 </head>
-<body>
-<div class="container">
+<body id="page-top">
 
-    {#    좌측 사이드바 #}
-    <div class="l-navbar" id="navbar">
-        <nav class="nav">
-            <div>
-                <div class="nav_brand">
-                    <ion-icon name="menu" class="nav_toggle" id="nav-toggle"></ion-icon>
-                    <a href="/" class="nav_logo">어디까지 들어봤니?</a>
-                </div>
-                <div class="nav_list">
-                    <a href="#" class="nav_link">
-                        <ion-icon name="home-outline"></ion-icon>
-                        <span class="nav_name">Home</span>
-                    </a>
-                </div>
-                <div class="nav_list">
-                    <a href="#" class="nav_link">
-                        <ion-icon name="pricetag-outline"></ion-icon>
-                        <span class="nav_name">커뮤니티</span>
-                    </a>
-                </div>
-                <div class="nav_list">
-                    <a href="#" class="nav_link">
-                        <ion-icon name="bulb-outline"></ion-icon>
-                        <span class="nav_name">추천 앨범</span>
-                    </a>
-                </div>
-                <div class="nav_list">
-                    <a href="#" class="nav_link">
-                        <ion-icon name="people-outline"></ion-icon>
-                        <span class="nav_name">마이페이지</span>
-                    </a>
-                </div>
-                <div class="nav_list">
-                    <a href="#" class="nav_link">
-                        <ion-icon name="log-out-outline"></ion-icon>
-                        <span class="nav_name">로그아웃</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </div>
-    {#    여기까지 사이드바 #}
-
-
-
-    <div class="flex-column">
-        <div class="card" style="width: 50%">
-            <div class="card-header">
-                찾고자 하는 키워드를 입력하세요
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <div class="d-flex justify-content-center align-items-center">
-                    <input id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">
-
-                    <button class="btn btn-info-outline" onclick="#">
-                        검색
-                    </button>
-                </div>
-            </div>
+<!-- 하단 고정 navbar -->
+<nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
+    <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
+        <a class="navbar-brand" href="#page-top">맨 위로</a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
+                <li class="nav-item"><a class="nav-link" href="#services">숨은명반</a></li>
+                <li class="nav-item"><a class="nav-link" href="/mypage">마이페이지</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="logout()">로그아웃</a></li>
+            </ul>
         </div>
+    </div>
+</nav>
 
-    {#    카드형식 리스트 #}
-    <div class="album_list">
-        <div class="row row-cols-1 row-cols-md-4 g-4" id="albums_box">
-{#            <div class="col">#}
-{#                <div class="card h-100">#}
-{#                    <img src=${} class="card-img-top">#}
-{#                    <div class="card-body">#}
-{#                        <h5 class="card-title">제목제목</h5>#}
-{#                        <p class="card-text">내용내용</p>#}
-{#                        <p>내용2</p>#}
-{#                        <p class="">코멘트?</p>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-            {% for row in albums %}
-                {% set name = row["name"] %}
-                {% set image = row["image"][2]["#text"] %}
-                <div class="col">
-                    <div class="card h-100">
-                        <img src={{ image }} class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ name }}</h5>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+<div class="top_pos flex-column">
+    <h1>어디까지</h1>
+    <h1>들어봤니?</h1>
+    <br>
+    <div class="flex-row search_box">
+        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">
+        <button class="btn btn-dark" onclick="search()">검색</button>
     </div>
 </div>
 
+<div class="bottom_pos" id="page-top" style="background-color: tomato; overflow: scroll">
+    {% if keyword %}
+        <h3 class="sub_title">검색결과: {{ keyword }}</h3>
 
-<!-- IONICONS -->
-<script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
-<!-- JS -->
-<script src="static/js/sidebar.js"></script>
+    <div class="album_list" id="search-result">
+        <div class="row row-cols-1 row-cols-md-4 m-5">
+            {% for row in albums %}
+                {% if row["name"] != null %}
+                    {% set name = row["name"] %}
+                    {% set image = row["image"][2]["#text"] %}
+                    <a href="/detail/{{keyword}}/{{name|string}}">
+                        <div class="card">
+                        <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">{{ name }}</h5>
+                        </div>
+                    </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+        <h3 class="sub_title">Trending...</h3>
+    <div class="album_list" id="show-content">
+        <div class="row row-cols-1 row-cols-md-4 m-5">
+            {% for row in artist %}
+                    {% set name = row["name"] %}
+                    {% set image = row["image"][2]["#text"] %}
+                        <div class="card">
+                        <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">{{ name }}</h5>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    {% endif %}
+</div>
+
+{#    <div class="flex-column">#}
+{#        <div class="card" style="width: 50%">#}
+{#            <div class="card-header">#}
+{#                찾고자 하는 키워드를 입력하세요#}
+{#            </div>#}
+{#            <div class="card-body">#}
+{#                <h5 class="card-title">Special title treatment</h5>#}
+{#                <div class="d-flex justify-content-center align-items-center">#}
+{#                    <input id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">#}
+{##}
+{#                    <button class="btn btn-info-outline" onclick="search()">#}
+{#                        검색#}
+{#                    </button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+{#    카드형식 리스트 #}
+<div class="album_list">
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="albums_box">
+        {#            <div class="col">#}
+        {#                <div class="card h-100">#}
+        {#                    <img src=${} class="card-img-top">#}
+        {#                    <div class="card-body">#}
+        {#                        <h5 class="card-title">제목제목</h5>#}
+        {#                        <p class="card-text">내용내용</p>#}
+        {#                        <p>내용2</p>#}
+        {#                        <p class="">코멘트?</p>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+
+    </div>
+</div>
 </body>
 </html>
