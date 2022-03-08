@@ -23,7 +23,12 @@
     <link rel="stylesheet" href="/static/css/detail.css">
 
     <script>
-
+        function search() {
+            const search = $('#find-keyword').val()
+            console.log(search)
+            if (search === "") return;
+            location.href = `/main/${search}`
+        }
     </script>
 
 </head>
@@ -36,11 +41,11 @@
             <h1>들어봄?</h1>
         </div>
         <input class="detail_search" type="text" placeholder="Search...">
-        <button class="btn btn-dark-outline detail_btn" onclick="">검색</button>
+        <button class="btn btn-dark-outline detail_btn" onclick="search()">검색</button>
     </div>
 
 {#    컨텐츠 #}
-    <div class="detail_content container" style="background-color: tomato">
+    <div class="detail_content container">
         <div class="flex-row">
             <div class="flex-column">
                 <img src={{ album["image"][3]["#text"] }}

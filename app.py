@@ -1,23 +1,49 @@
+import json
+
 import requests
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 import jwt
 import datetime
+import base64
 
 import hashlib
 
 from dotenv import load_dotenv
 import os
 
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy.util as util
+import pprint
+
 load_dotenv()
+
 app = Flask(__name__)
 
 client = MongoClient(os.environ.get("MONGO_DB_KEY"))
 db = client.dbsparta
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
+# lastFM 전용
 API_KEY = os.environ.get("API_KEY")
 BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+
+# 스포티파이 api 정보 가져오기
+# BASE_URL = "https://api.spotify.com/v1/"
+#
+# client_id = "5871a40d99e946baa4a50c47fde5587a"
+# client_secret = os.environ.get("SPOTIFY_SECRET")
+# endpoint = "https://accounts.spotify.com/api/token"
+#
+# encoded = base64.b64encode("{}:{}".format(client_id, client_secret).encode('utf-8')).decode('ascii')
+# headers = {"Authorization": "Basic {}".format(encoded)}
+# payload = {"grant_type": "client_credentials"}
+# response = requests.post(endpoint, data=payload, headers=headers)
+# access_token = json.loads(response.text)['access_token']
+# headers = {"Authorization": "Bearer {}".format(access_token)}
+
 
 @app.route('/')
 def home():
@@ -32,7 +58,7 @@ def home():
     except jwt.exceptions.DecodeError:
         return render_template('index.html', nickname="anon")
 
-# 페이지 렌더링
+# # 페이지 렌더링 (lastFM)
 @app.route('/main')
 def main():
 
@@ -55,7 +81,18 @@ def main():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
-# 검색
+# # # 메인 렌더링 (spotify)
+# @app.route('/main')
+# def main():
+#
+#     params = {
+#         "seed_artists":
+#     }
+#
+#     r = requests.get(BASE_URL + "recommendations", params=)
+
+
+# 검색 lastFM
 @app.route('/main/<keyword>')
 def searchMain(keyword):
     r = requests.get(BASE_URL + "?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
@@ -63,8 +100,35 @@ def searchMain(keyword):
     albums = response["topalbums"]["album"]
     return render_template('main.html', keyword=keyword, albums=albums)
 
-# 앨범의 상세정보
+# 검색 spotify
+# @app.route('/main/<keyword>')
+# def spoti_search(keyword):
+#     params = {
+#         "q": keyword,
+#         "type": "artist",
+#     }
+#     r = requests.get("https://api.spotify.com/v1/search", params=params, headers=headers)
+#     response = r.json()
+#     print(response)
+#     # return jsonify(response)
+    # artistId = response["artists"]["items"][0]["id"]
+    # # artistId = "4aawyAB9vmqN3uQ7FjRGTy"
+    # print(artistId)
+    #
+    # pprint.pprint(response)
+    # getAlbum = requests.get("https://api.spotify.com/v1/albums/" + artistId, headers=headers)
+    # res = getAlbum.json()
+    # return jsonify(res)
+#
+# #test
+# @app.route('/main/test/<keyword>')
+# def test(keyword):
+#     getAlbum = requests.get("https://api.spotify.com/v1/albums/" + keyword, headers=headers)
+#     res = getAlbum.json()
+#     return jsonify(res)
 
+
+# 앨범의 상세정보
 @app.route('/detail/<artist>/<album>')
 def detail(artist, album):
 

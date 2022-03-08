@@ -24,6 +24,12 @@
 
     <script>
 
+        {#$('#find-keyword').keypress((e) => {#}
+        {#    if (e.which ===13) {#}
+        {#        search();#}
+        {#    }#}
+        /*})*/
+
         function search() {
             const search = $('#find-keyword').val()
             console.log(search)
@@ -61,24 +67,26 @@
     <h1>들어봤니?</h1>
     <br>
     <div class="flex-row search_box">
-        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">
+        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요..." onkeypress="javascript:if(event.keyCode === 13) {search();}">
         <button class="btn btn-dark" onclick="search()">검색</button>
     </div>
 </div>
 
-<div class="bottom_pos" id="page-top" style="background-color: tomato; overflow: scroll">
+<div class="bottom_pos" id="page-top" style="overflow: scroll">
     {% if keyword %}
         <h3 class="sub_title">검색결과: {{ keyword }}</h3>
 
     <div class="album_list" id="search-result">
-        <div class="row row-cols-1 row-cols-md-4 m-5">
+        <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
             {% for row in albums %}
                 {% if row["name"] != null %}
                     {% set name = row["name"] %}
                     {% set image = row["image"][2]["#text"] %}
                     <a href="/detail/{{keyword}}/{{name|string}}">
-                        <div class="card">
-                        <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                        <div class="card pt-3">
+                            <div class="flex-row">
+                                <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                            </div>
                         <div class="card-body flex-column">
                             <h5 class="card-title">{{ name }}</h5>
                         </div>
