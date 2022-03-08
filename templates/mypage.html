@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>마이페이지</title>
+
+    <!--  font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+
+    <!--    JQuery -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+
+    <!--    BootStrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <script>
+      function logout(){
+        $.removeCookie('mytoken');
+        alert('로그아웃!')
+        window.location.href='/login'
+      }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h4>닉네임 : {{nickname}}</h4>
+    </div>
+    <button class="btn btn-danger" onclick="logout()">로그아웃</button>
+    <button class="btn btn-primary" onclick="location.href='/'">메인으로</button>
+</body>
+</html>

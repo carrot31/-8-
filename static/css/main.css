@@ -1,0 +1,10 @@
+
+.header_card {
+    margin: 0 auto 30px;
+}
+
+.album_list {
+    margin: 20px auto;
+    max-width: 1500px;
+    width: 100%;
+}

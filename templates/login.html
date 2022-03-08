@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>로그인</title>
+
+    <!--  font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+
+    <!--    JQuery -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+
+    <!--    BootStrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <!--    Custom CSS -->
+    <link rel="stylesheet" href="/static/css/loginForm.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script>
+        {% if msg %}
+        alert("{{ msg }}")
+        {% endif %}
+
+        function login() {
+            const id = $('#userid').val()
+            const pw = $('#userpw').val()
+
+            if(id === "") {
+                alert("아이디를 입력해주세요.")
+                $('#userid').focus();
+                return
+            }
+            if(pw === "") {
+                alert("비밀번호를 입력해주세요.")
+                $('#userpw').focus();
+                return
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/login",
+                data: {id_give: id, pw_give: pw},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+                        // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+                        $.cookie('mytoken', response['token']);
+
+                        alert('로그인 완료!')
+                        window.location.href = '/'
+                    } else {
+                        // 로그인이 안되면 에러메시지를 띄웁니다.
+                        alert(response['msg'])
+                    }
+                }
+            })
+        }
+    </script>
+
+</head>
+<body>
+<div class="container">
+    <h1 class="alert alert-secondary">로그인 페이지</h1>
+    <div class="container d-flex" style="width:50%">
+        <div class="container-fluid">
+            <div class="input-box">
+                <input id="userid" type="text" name="userid" placeholder="아이디" required>
+                <label for="userid">아이디</label>
+            </div>
+            <div class="input-box">
+                <input id="userpw" type="password" name="userpw" placeholder="비밀번호" onkeypress="javascript:if(event.keyCode === 13) {login();}" required>
+                <label for="userpw">비밀번호</label>
+            </div>
+            <div class="login-etc">
+                <a href="register">회원이 아니신가요?</a>
+            </div>
+            <div class="align-items-center">
+                <button onclick="login()" class="btn btn-primary">로그인</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>로그인 후 보여지는 메인페이지</title>
+
+    <!--  font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+
+    <!--    JQuery -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+
+    <!--    BootStrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <!--    Custom -->
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+</head>
+<body>
+<div class="container">
+
+    {#    좌측 사이드바 #}
+    <div class="l-navbar" id="navbar">
+        <nav class="nav">
+            <div>
+                <div class="nav_brand">
+                    <ion-icon name="menu" class="nav_toggle" id="nav-toggle"></ion-icon>
+                    <a href="/" class="nav_logo">어디까지 들어봤니?</a>
+                </div>
+                <div class="nav_list">
+                    <a href="#" class="nav_link">
+                        <ion-icon name="home-outline"></ion-icon>
+                        <span class="nav_name">Home</span>
+                    </a>
+                </div>
+                <div class="nav_list">
+                    <a href="#" class="nav_link">
+                        <ion-icon name="pricetag-outline"></ion-icon>
+                        <span class="nav_name">커뮤니티</span>
+                    </a>
+                </div>
+                <div class="nav_list">
+                    <a href="#" class="nav_link">
+                        <ion-icon name="bulb-outline"></ion-icon>
+                        <span class="nav_name">추천 앨범</span>
+                    </a>
+                </div>
+                <div class="nav_list">
+                    <a href="#" class="nav_link">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <span class="nav_name">마이페이지</span>
+                    </a>
+                </div>
+                <div class="nav_list">
+                    <a href="#" class="nav_link">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                        <span class="nav_name">로그아웃</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {#    여기까지 사이드바 #}
+
+
+
+    <div class="flex-column">
+        <div class="card" style="width: 50%">
+            <div class="card-header">
+                찾고자 하는 키워드를 입력하세요
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <div class="d-flex justify-content-center align-items-center">
+                    <input id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">
+
+                    <button class="btn btn-info-outline" onclick="#">
+                        검색
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    {#    카드형식 리스트 #}
+    <div class="album_list">
+        <div class="row row-cols-1 row-cols-md-4 g-4" id="albums_box">
+{#            <div class="col">#}
+{#                <div class="card h-100">#}
+{#                    <img src=${} class="card-img-top">#}
+{#                    <div class="card-body">#}
+{#                        <h5 class="card-title">제목제목</h5>#}
+{#                        <p class="card-text">내용내용</p>#}
+{#                        <p>내용2</p>#}
+{#                        <p class="">코멘트?</p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+            {% for row in albums %}
+                {% set name = row["name"] %}
+                {% set image = row["image"][2]["#text"] %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src={{ image }} class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ name }}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    </div>
+</div>
+
+
+<!-- IONICONS -->
+<script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+<!-- JS -->
+<script src="static/js/sidebar.js"></script>
+</body>
+</html>
