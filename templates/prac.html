@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+
+    <title>어디까지 들어봤니?</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/mystyle1.css" rel="stylesheet">
+    <!-- Google web font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap"
+          rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='mystyle1.css') }}" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+</head>
+<body>
+
+<!--Header -->
+<header>
+    <!-- 로고 -->
+    <div class="inner">
+        <!-- <div class="logo">
+        <a href="/">
+        </a>
+        </div> -->
+    <!-- 프로필 -->
+        <div class="profile">
+                <div class="profile-img>
+            <a class="image is-32x32" href="/user/{{ user_info.username }}">
+                        <img style="display: block;" class="is-rounded"
+                             src="{{ url_for('static', filename=user_info.profile_pic_real) }}" ) }}">
+                    </a>
+                    <div class="profile-name">
+                        <h3>{{ user_info.profile_name }}<span>님</span></h3>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+
+    <!-- 중간 -->
+    <div class="search">
+        <div class="main-text">
+            <h1> 어디까지<br>들어봤니?</h1>
+        </div>
+        <div class="search-bar">
+            <input class="input is-rounded" type="text" placeholder="노래를 검색해 보세요">
+        <button onclick="search()">검색</button>
+        </div>
+    </div>
+</header>
+
+<!--top10 -->
+
+<section>
+<div>
+    <h2>Popular song</h2>
+
+</div>
+</section>
+
+</body>
+</html>
+
+
+<!doctype html>
+<html lang="ko">
+    <head>
+
+        <!-- Webpage Title -->
+        <title>어디까지 들어봤니?</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- Font Awesome CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap"
+              rel="stylesheet">
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+        <!--한울님 js -->
+        <script src="/static/js/jquery-3.6.0.min.js"></script>
+        <script src="/static/js/jquery.cookie.js"></script>
+
+        <script>
+            function search() {
+            const search = $('#find-keyword').val()
+            console.log(search)
+            if (search === "") return;
+            $('#albums_box').empty()
+            location.href = `/main/${search}`
+        }
+        </script>
+
+    </head>
+    <body>
+
+    <div class="header">
+{#    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">#}
+        <div class="navbar-brand">
+            <div class="logo">
+{#            <a class="navbar-item" href="/">#}
+{#<!--                <img src="{{ url_for('static', filename='logo.png') }}">-->#}
+{#                <strong class="is-sparta"#}
+{#                        style="font-wight:700; sans-serif;font-size: larger;">어디까지<br>들어봤니?</strong>#}
+{#            </a>#}
+            </div>
+        <!-- 프로필 -->
+        <div class="profile" style="right:0;">
+            <div class="profile-img">
+                <figure class="media-right" style="align-self: center">
+                    <a class="image is-32x32" href="/user/{{ user_info.username }}">
+                        <img style="display: block;" class="is-rounded"
+                             src="{{ url_for('static', filename=user_info.profile_pic_real) }}" ) }}">
+                    </a>
+                    <div class="profile-name">
+                    <h3 style="font-weight: 700;">{{ user_info.profile_name }}<span style="font-weight: 500">님</span>
+                    </h3>
+                    </div>
+                </figure>
+            </div>
+        </div>
+</div>
+        </nav>
+    <section class="section">
+        <div>
+            <h1>어디까지<br>들어봤니?</h1>
+        </div>
+    <article class="media">
+        <div class="media-content">
+            <div class="field">
+                <p class="control">
+	                  <input id="find-keyword" class="search_bar input is-rounded" type="text" placeholder="사랑은 늘 도망가 - 임영웅">
+                    <button onclick="search()">검색</button>
+                                </p>
+            </div>
+        </div>
+    </article>
+</section>
+        </div>
+
+    <!-- 한울님 html -->
+{#    <div class="flex-row search_box">#}
+{#        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">#}
+{#        <button class="btn btn-dark" onclick="search()">검색</button>#}
+{#    </div>#}
+{#</div>#}
+
+<div class="bottom_pos" id="page-top" style="background-color: tomato; overflow: scroll">
+    {% if keyword %}
+        <h3 class="sub_title">검색결과: {{ keyword }}</h3>
+
+    <div class="album_list" id="search-result">
+        <div class="row row-cols-1 row-cols-md-4 m-5">
+            {% for row in albums %}
+                {% if row["name"] != null %}
+                    {% set name = row["name"] %}
+                    {% set image = row["image"][2]["#text"] %}
+                    <a href="/detail/{{keyword}}/{{name|string}}">
+                        <div class="card">
+                        <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">{{ name }}</h5>
+                        </div>
+                    </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+        <h3 class="sub_title">Trending...</h3>
+    <div class="album_list" id="show-content">
+        <div class="row row-cols-1 row-cols-md-4 m-5">
+            {% for row in artist %}
+                    {% set name = row["name"] %}
+                    {% set image = row["image"][2]["#text"] %}
+                        <div class="card">
+                        <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">{{ name }}</h5>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    {% endif %}
+</div>
+
+{#    <div class="flex-column">#}
+{#        <div class="card" style="width: 50%">#}
+{#            <div class="card-header">#}
+{#                찾고자 하는 키워드를 입력하세요#}
+{#            </div>#}
+{#            <div class="card-body">#}
+{#                <h5 class="card-title">Special title treatment</h5>#}
+{#                <div class="d-flex justify-content-center align-items-center">#}
+{#                    <input id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">#}
+{##}
+{#                    <button class="btn btn-info-outline" onclick="search()">#}
+{#                        검색#}
+{#                    </button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+{#    카드형식 리스트 #}
+<div class="album_list">
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="albums_box">
+        {#            <div class="col">#}
+        {#                <div class="card h-100">#}
+        {#                    <img src=${} class="card-img-top">#}
+        {#                    <div class="card-body">#}
+        {#                        <h5 class="card-title">제목제목</h5>#}
+        {#                        <p class="card-text">내용내용</p>#}
+        {#                        <p>내용2</p>#}
+        {#                        <p class="">코멘트?</p>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+
+    </div>
+</div>
+
+    </body>
+</html>
