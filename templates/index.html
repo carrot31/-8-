@@ -1,97 +1,74 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-
     <meta charset="UTF-8">
+
     <title>어디까지 들어봤니?</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <style>
-        ul {
-            list-style:none;
-        }
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/mystyle1.css" rel="stylesheet">
+    <!-- Google web font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap"
+          rel="stylesheet">
 
-        .header {
-            width: 1100px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .inner > h1 {
-            text-align: center;
-            margin:130px 0 80px 0;
-        }
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
-        .searchBar {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-        .musicListList {
-            text-align: center;
-        }
-
-    </style>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script>
-<script>
-    function addMusicList() {
-         let musicKeyWord = $('#songinfo').val()
-        $.ajax({
-            type: 'GET',
-            url: 'http://ws.audioscrobbler.com/2.0/?method=track.search&track='+musicKeyWord+'&api_key=b429bcd64a8e5b0e1499635907f62f0f&format=json',
-            success: function (response) {
-                alert("검색완료!")
-
-                 let musicList = response["results"]["trackmatches"]["track"];
-                 for (let i = 0; i < musicList.length; i++) {
-                //     let albumImg = musicList[i]["image"][0]["#text"]
-                     let albumTitle = musicList[i]["name"]
-                     let albumArtist = musicList[i]["artist"]
-                     getMusicHtml(albumTitle, albumArtist)
-                 }
-            }
-        })
-    }
-
-    function getMusicHtml(title, artist) {
-        let musicHtml = ` <ul class="musicList">
-            <li class="title">${title}</li>
-            <li class="artist">${artist}</li>
-        </ul>`
-        $('.musicListList').append(musicHtml)
-    }
-
-
-</script>
 
 </head>
-
 <body>
-<header>
-    <div class="header">
-        <div class="inner">
-            <h1>어디까지 들어봤니?</h1>
-        </div>
 
+<!--Header -->
+<header>
+    <!-- 로고 -->
+    <div class="inner">
+        <!-- <div class="logo">
+        <a href="/">
+        </a>
+        </div> -->
+
+    <!-- 프로필 -->
+        <div class="profile">
+                <div class="profile-img">
+            <a class="image is-32x32" href="/user/{{ user_info.username }}">
+                        <img class="is-rounded"
+                             src="{{ url_for('static', filename=user_info.profile_pic_real) }}" ) }}">
+                    </a>
+                    <div class="profile-name">
+                        <h3 style="font-weight: 700";>{{ user_info.profile_name }}<span style="font-weight: 400";>님</span></h3>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+
+    <!-- 중간 -->
+    <div class="visual">
+        <div class="main-text">
+            <h1 style="font-weight: 700"> 어디까지 들어봤니?(로고)</h1>
+        </div>
+        <div class="search">
+            <input class="search-bar" type="text" placeholder="노래를 검색해 보세요">
+        <button class="btn-search"onclick="search()">검색</button>
+        </div>
     </div>
 </header>
-<div class="searchBar">
-    <form action="methods">
-        <p><label for="songinfo">검색하기</label></p>
-        <input type="text" id="songinfo" class="whatToSearch" placeholder="Search">
-        <button type="button" onclick="addMusicList()">검색</button>
-    </form>
-</div>
-<div class="musicListList">
-    <ul class="musicList">
-        <!-- <li class="title">GEE</li>-->
-        <!-- <li class="artist">소녀시대</li>-->
-    </ul>
-</div>
 
-</body>
+<!-- 부트 스트랩 카드 -->
+<section>
+    <div class="inner">
+        <div class="tranding">
+        <h1>Trending</h1>
+        </div>
+    </div>
+
+</section>
+    </body>
 </html>
