@@ -40,17 +40,16 @@
             <h1>어디까지</h1>
             <h1>들어봄?</h1>
         </div>
-        <input class="detail_search" type="text" placeholder="Search...">
+        <input id="find-keyword" class="detail_search" type="text" placeholder="Search...">
         <button class="btn btn-dark-outline detail_btn" onclick="search()">검색</button>
     </div>
 
 {#    컨텐츠 #}
     <div class="detail_content container">
         <div class="flex-row">
+            <div class="flex-column info_box">
+                <img src={{ album["image"][3]["#text"] }}>
             <div class="flex-column">
-                <img src={{ album["image"][3]["#text"] }}
-            </div>
-            <div class="info_box flex-column">
                 <div class="flex-row">
                     <h2>{{ a_name }}</h2>
                 </div>
@@ -61,28 +60,28 @@
                 <div class="flex-row">
                     {{ album["mbid"] }}
                 </div>
+            </div>
                 <div class="flex-row">
                 {% for tag in album["tags"]["tag"] %}
                     <a href="{{ tag["url"] }}">#{{ tag["name"] }}</a>&nbsp;
                 {% endfor %}
                 </div>
             </div>
-            </div>
             {% if album["tracks"] %}
             <div class="track_list">
                 <table class="table table-responsive">
-                    {% set count = 1 %}
                     {% for track in album["tracks"]["track"] %}
                         {% set track_name = track["name"] %}
-                        <tr>
-                            <td>{{ count }}</td>
+                        {% set url = track["url"] %}
+                        <tr><a href="{{ url }}">
+                            <td>#</td>
                             <td>{{ track_name }}</td>
-                            <td>여백의 미</td>
-                        </tr>
-                        {% set count = count + 1 %}
+                            <td><ion-icon name="play-circle-outline"></ion-icon></td>
+                        </a></tr>
                     {% endfor %}
                 </table>
             </div>
+                </div>
 
             {% else %}
             <div class="exception_view">
@@ -92,23 +91,34 @@
         </div>
     </div>
 
-    <div class="container" style="background-color: #5c636a">
+    <div class="container">
         <h3>코멘트</h3>
-        <table class="table">
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-            </tr>
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-            </tr>
-        </table>
-        <div class="flex-row">
-            <input type="text">
-            <button>작성</button>
+        <div class="container">
+            <table class="table table-hover">
+                <tr>
+                    <td>닉네임</td>
+                    <td>ㅎㅇㅎㅇ</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>닉네임</td>
+                    <td>ㅎㅇㅎㅇ</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <div class="flex-row">
+                <input class="comment_input" type="text">
+                <button>작성</button>
+            </div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
 </body>
 </html>

@@ -3,6 +3,10 @@
     /*color: white;*/
 }
 
+a {
+    text-decoration: none;
+}
+
 .flex-row {
     display: flex;
     flex-direction: row;
