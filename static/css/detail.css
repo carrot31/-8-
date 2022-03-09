@@ -1,0 +1,55 @@
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+
+
+.brand_logo {
+    margin-left: 10px;
+    margin-right: 30px;
+}
+
+
+.detail_search {
+    outline: none;
+    border: none;
+    max-width: 500px;
+    width: 35%;
+    margin-top: 8px;
+
+    padding: 10px 10px 10px 30px;
+    border-radius: 20px;
+    box-shadow: gray 1px 3px 3px;
+
+    font-size: 18px;
+}
+
+.detail_btn {
+    width: 80px;
+    position: relative;
+    left: -80px;
+    outline: none;
+    border: none;
+}
+
+.detail_content {
+    margin: 30px auto;
+    width: 100%;
+}
+
+.info_box {
+    margin-right: 50px;
+    width: 50%;
+}
+
+.track_list {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.comment_input {
+    padding: 10px;
+    width: 95%;
+}

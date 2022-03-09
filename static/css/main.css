@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.top_pos {
+    background-image: url("/static/public/header.jpg");
+    background-position: center;
+    background-size: cover;
+    height: 45%;
+}
+
+.search_box {
+    max-width: 700px;
+    width: 65%;
+    position: relative;
+    left: 40px;
+}
+
+.search_box > input{
+    padding: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.search_box > button {
+    position: relative;
+    left: -80px;
+    width: 80px;
+    font-size: 24px;
+}
+
+.search_bar {
+    outline: none;
+    border: none;
+    width: 100%;
+    padding: 15px 15px 15px 35px;
+    border-radius: 5px;
+    font-size: 24px;
+}
+
+.bottom_pos {
+    height: 65%;
+    transition: all 0.5s;
+}
+
+.sub_title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-top: 30px;
+    margin-bottom: -20px;
+    margin-left: 40px;
+}
+
+.album_list {
+    position: inherit;
+}
