@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>로그인 후 보여지는 메인페이지</title>
+
+    <!--  font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+
+    <!--    JQuery -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+
+    <!--    BootStrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <!--    bulma 쓰면 기존 만들어놓은 css 터져서 못쓸듯 -->
+{#        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">#}
+
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    <script>
+        {#$('#find-keyword').keypress((e) => {#}
+        {#    if (e.which ===13) {#}
+        {#        search();#}
+        {#    }#}
+        /*})*/
+
+        function search() {
+            const search = $('#find-keyword').val()
+            console.log(search)
+            if (search === "") return;
+            $('#albums_box').empty()
+            location.href = `/main/${search}`
+        }
+
+        function logout() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = '/main'
+        }
+    </script>
+
+</head>
+<body id="page-top">
+
+<!-- 하단 고정 navbar -->
+{% if keyword or msg %}
+    <br>
+{% else %}
+    <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
+        <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
+            <a class="navbar-brand" href="#page-top"></a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#hidemb">명반 추천</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}"></a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer"></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endif %}
+
+<div class="top_pos flex-column">
+    <!-- 프로필 -->
+        <div class="profile">
+            <div class="flex-row">
+                <div class="image_box profile_position">
+                    <a href="/mypage/{{ user_info.username }}">
+                        <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
+                    </a>
+                </div>
+                <div class="profile-name profile_position">
+                    <a href="/mypage/{{ user_info.username }}">
+                        <h3 class="profile-text">{{ user_info.profile_name }}</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <a href="/main">
+        <div class="logo-middle">
+            <img class="logo" src="/static/public/logo_wh.png">
+        </div>
+    </a>
+    <br>
+    <div class="flex-row search_box">
+        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요..."
+               onkeypress="javascript:if(event.keyCode === 13) {search();}">
+        <button class="btn btn-dark" onclick="search()">검색</button>
+    </div>
+
+</div>
+
+<div class="bottom_pos" id="page-top" style="overflow: scroll">
+    {% if keyword %}
+        <h3 class="sub_title">검색결과: {{ keyword }}</h3>
+
+        <div class="album_list" id="search-result">
+            <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
+                {% for row in albums %}
+                    {% if row["name"] != null %}
+                        {% set name = row["name"] %}
+                        {% set image = row["image"][2]["#text"] %}
+                        <a href="/detail/{{ keyword }}/{{ name|string }}">
+                            <div class="card pt-3">
+                                <div class="flex-row">
+                                    <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                                </div>
+                                <div class="card-body flex-column">
+                                    <h5 class="card-title">{{ name }}</h5>
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+    {% else %}
+        {% if msg %}
+            <div class="flex-column">
+                <h3 style="margin-top: 50px">검색결과가 없습니다!</h3>
+            </div>
+        {% else %}
+            <h3 class="sub_title" id="trend">Trending Artist</h3>
+            <div class="album_list" id="show-content">
+                <div class="row row-cols-1 row-cols-md-5 m-5">
+                    {% for row in artist %}
+                        {% set name = row["name"] %}
+                        {% set image = row["image"][2]["#text"] %}
+                        <div class="card">
+                            <div class="flex-row">
+                                <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                            </div>
+                            <div class="card-body flex-column">
+                                <h5 class="card-title">{{ name }}</h5>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <h3 class="sub_title" id="hidemb">명반 추천</h3>
+            <div class="myungban">
+                <div class="row row-cols-1 row-cols-md-5 m-5">
+                    {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
+                    {% for m in myungban %}
+                        <div class="card">
+                            <div class="flex-row">
+                                <img src={{ m["cover"] }} alt="{{ m['album'] }}" style="max-width: 200px">
+                            </div>
+                            <div class="card-body flex-column">
+                                <h5 class="card-title">{{ m.artist }} - {{ m["album"] }}</h5>
+                                <p>추천자: {{ m["recommand"] }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>

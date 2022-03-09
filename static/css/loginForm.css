@@ -1,0 +1,57 @@
+
+.input-box {
+    width: 100%;
+    position: relative;
+    margin: 10px 0;
+}
+
+.input-box > input {
+    background: transparent;
+    border: none;
+    border-bottom: solid 1px black;
+    padding: 20px 0px 5px 0px;
+    font-size: 14pt;
+    max-width: 500px;
+    width: 100%;
+}
+
+input::placeholder{
+    color:transparent;
+}
+
+input:placeholder-shown + label{
+    color: gray;
+    font-size: 14pt;
+    top: 15px;
+}
+
+input:focus + label, label {
+    color: gray;
+    font-size: 10pt;
+    pointer-events: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transition: all 1s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+}
+
+input:focus, input:not(:placeholder-shown) {
+    border-bottom: solid 1px gray;
+    outline: none;
+}
+
+.login-etc {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 20px;
+}
+
+@keyframes id-duplicate {
+    from { left: -5px }
+    to { right: 5px }
+}
