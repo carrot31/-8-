@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+    <head>
+
+        <!-- Webpage Title -->
+        <title>Home | 어디까지 들어봤니?</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- Font Awesome CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/static/css/index.css" rel="stylesheet">
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    </head>
+    <body>
+    <section class="top">
+        <div class="profile">
+
+        </div>
+
+        <div class="top_box">
+            <div class="logo">
+                <img src="/static/img/logo_wh.png">
+            </div>
+            <section class="section">
+        <article class="media">
+            <figure class="media-left" style="align-self: center">
+                <a class="image is-32x32" href="#"><img class="is-rounded" src="{{ url_for("static", filename="profile_pics/profile_placeholder.png")}}"></a>
+            </figure>
+            <div class="media-content">
+                <div class="field">
+                    <p class="control">
+                        <input id="input-post" class="input is-rounded" placeholder="무슨 생각을 하고 계신가요?"
+                               onclick='$("#modal-post").addClass("is-active")'></p>
+                </div>
+            </div>
+        </article>
+    </section>
+        </div>
+
+
+    </section>
+
+
+    </body>
+</html>
