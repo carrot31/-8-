@@ -23,7 +23,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 API_KEY = os.environ.get("API_KEY")
 BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
-
 # 첫 대문 , 토큰이 발급돼있는 상태라면 로그인 버튼 대신 username 글자가 표시됨
 @app.route('/')
 def title():
@@ -44,7 +43,20 @@ def title():
 # /login 렌더링
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload['id']})
+        if user_info is None:
+            return render_template('login.html')
+        else:
+            return render_template("mypage.html", user_info=user_info)
+            # return redirect(url_for("mypage", user_info=user_info))
+
+    except jwt.ExpiredSignatureError:
+        return render_template('login.html')
+    except jwt.exceptions.DecodeError:
+        return render_template('login.html')
 
 # 회원가입 시 db에 동일한 아이디가 있는지 검사
 @app.route('/sign_up/check_dup', methods=['POST'])
@@ -106,6 +118,16 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("login"))
 
+@app.route('/mypage/<username>/list')
+def show_list(username):
+
+    like_list = list(db.myungban.find({'recommand': username}, {'_id': False}))
+    print(like_list)
+    if like_list is None:
+        return jsonify({"msg": "아직 추천한 앨범이 없습니다."})
+    else:
+        return jsonify({"list": like_list});
+
 
 @app.route('/update_profile', methods=['POST'])
 def save_img():
@@ -139,7 +161,7 @@ def main():
     # 처음 보여줄 컨텐츠를 담은 api 주소 ( top artist )
     LAST_URL = "?method=chart.gettopartists&api_key=" + API_KEY + "&format=json"
     token_receive = request.cookies.get('mytoken')
-    print(token_receive)
+
     try:
         if token_receive is None:
             return redirect(url_for("login"))
@@ -155,7 +177,6 @@ def main():
 
         myungban = list(db.myungban.find({}, {"_id": False}))
 
-        print(myungban)
         return render_template('main.html', user_info=user_info, artist=top_artist, myungban=myungban)
 
     except jwt.ExpiredSignatureError:
@@ -206,6 +227,40 @@ def detail(artist, album):
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+@app.route('/detail/register', methods=['POST'])
+def myungban_regist():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        if token_receive is None:
+            return redirect(url_for("login"))
+
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload['id']})
+
+        album_receive = request.form["album_give"]
+        artist_receive = request.form["artist_give"]
+        cover_receive = request.form["cover_give"]
+        username = request.form["username_give"]
+
+        doc = {
+            'album': album_receive,
+            'artist': artist_receive,
+            'cover': cover_receive,
+            'recommand': username
+        }
+
+        db.myungban.insert_one(doc)
+
+        return jsonify({"msg": "등록완료!"})
+
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+
+
 
 
 if __name__ == '__main__':

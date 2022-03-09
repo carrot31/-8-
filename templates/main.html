@@ -19,18 +19,12 @@
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
 
-    <!--    bulma 쓰면 기존 만들어놓은 css 터져서 못쓸듯 -->
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">#}
-
     <link rel="stylesheet" href="/static/css/main.css">
 
-    <script>
-        {#$('#find-keyword').keypress((e) => {#}
-        {#    if (e.which ===13) {#}
-        {#        search();#}
-        {#    }#}
-        /*})*/
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <script>
         function search() {
             const search = $('#find-keyword').val()
             console.log(search)
@@ -42,24 +36,23 @@
         function logout() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
-            window.location.href = '/main'
+            location.href = '/login'
         }
     </script>
 
 </head>
-<body id="page-top">
-
+<body>
 <!-- 하단 고정 navbar -->
 {% if keyword or msg %}
-    <br>
+    {# 검색하면 없어지게 #}
 {% else %}
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
         <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
             <a class="navbar-brand" href="#page-top"></a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
                     <li class="nav-item"><a class="nav-link" href="#hidemb">명반 추천</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#trend">Trend Artist</a></li>
                     <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}"></a></li>
                     <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer"></a></li>
                 </ul>
@@ -70,23 +63,23 @@
 
 <div class="top_pos flex-column">
     <!-- 프로필 -->
-        <div class="profile">
-            <div class="flex-row">
-                <div class="image_box profile_position">
-                    <a href="/mypage/{{ user_info.username }}">
-                        <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
-                    </a>
-                </div>
-                <div class="profile-name profile_position">
-                    <a href="/mypage/{{ user_info.username }}">
-                        <h3 class="profile-text">{{ user_info.profile_name }}</h3>
-                    </a>
-                </div>
+    <div class="profile">
+        <div class="flex-row">
+            <div class="image_box profile_position">
+                <a href="/mypage/{{ user_info.username }}">
+                    <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
+                </a>
+            </div>
+            <div class="profile-name profile_position">
+                <a href="/mypage/{{ user_info.username }}">
+                    <h3 class="profile-text">{{ user_info.profile_name }}</h3>
+                </a>
             </div>
         </div>
+    </div>
     <a href="/main">
         <div class="logo-middle">
-                <img class="logo" src="/static/public/logo_bk.png">
+            <img class="logo" src="/static/public/logo_bk.png">
         </div>
     </a>
     <br>
@@ -103,7 +96,7 @@
         <h3 class="sub_title">검색결과: {{ keyword }}</h3>
 
         <div class="album_list" id="search-result">
-            <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
+            <div class="row row-cols-1 row-cols-md-5 m-5">
                 {% for row in albums %}
                     {% if row["name"] != null %}
                         {% set name = row["name"] %}
@@ -129,6 +122,25 @@
                 <h3 style="margin-top: 50px">검색결과가 없습니다!</h3>
             </div>
         {% else %}
+            <h3 class="sub_title" id="hidemb">명반 추천</h3>
+            <div class="myungban">
+                <div class="row row-cols-1 row-cols-md-5 m-5">
+                    {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
+                    {% for m in myungban %}
+                        <a href="/detail/{{ m.artist }}/{{ m.album }}">
+                            <div class="card">
+                                <div class="flex-row">
+                                    <img src={{ m["cover"] }} alt="{{ m['album'] }}" style="max-width: 200px; width: 100%">
+                                </div>
+                                <div class="card-body flex-column">
+                                    <h5 class="card-title">{{ m.artist }} - {{ m["album"] }}</h5>
+                                    <p>추천인: {{ m["recommand"] }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
             <h3 class="sub_title" id="trend">Trending Artist</h3>
             <div class="album_list" id="show-content">
                 <div class="row row-cols-1 row-cols-md-5 m-5">
@@ -141,23 +153,6 @@
                             </div>
                             <div class="card-body flex-column">
                                 <h5 class="card-title">{{ name }}</h5>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <h3 class="sub_title" id="hidemb">명반 추천</h3>
-            <div class="myungban">
-                <div class="row row-cols-1 row-cols-md-5 m-5">
-                    {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
-                    {% for m in myungban %}
-                        <div class="card">
-                            <div class="flex-row">
-                                <img src={{ m["cover"] }} alt="{{ m['album'] }}" style="max-width: 200px">
-                            </div>
-                            <div class="card-body flex-column">
-                                <h5 class="card-title">{{ m.artist }} - {{ m["album"] }}</h5>
-                                <p>추천자: {{ m["recommand"] }}</p>
                             </div>
                         </div>
                     {% endfor %}

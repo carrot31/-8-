@@ -28,6 +28,47 @@
     <link rel="stylesheet" href="/static/css/mypage.css">
 
     <script>
+
+        $(document).ready(function () {
+            show_list();
+        });
+
+        function show_list() {
+            const username = "{{ user_info.username }}"
+            $.ajax({
+                type: "GET",
+                url: `/mypage/${username}/list`,
+                data: {},
+                success: function (response) {
+                    if(response["msg"]) {
+
+                    } else {
+                        const rows = response["list"]
+
+                        for (let i=0; i<rows.length; i++) {
+                            const album = rows[i]["album"]
+                            const artist = rows[i]["artist"]
+                            const cover = rows[i]["cover"]
+
+                            let temp_html = `
+                                <a href="/detail/${artist}/${album}">
+                                    <div class="card">
+                                        <div class="flex-row">
+                                            <img src=${cover} alt=${album} style="max-width: 200px; width: 100%">
+                                        </div>
+                                        <div class="card-body flex-column">
+                                            <h5 class="card-title">${artist} - ${album}</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            `
+                            $('#like-list').append(temp_html)
+                        }
+                    }
+                }
+            })
+        }
+
         function logout() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -65,8 +106,6 @@
             form_data.append("file_give", file)
             form_data.append("name_give", name)
             form_data.append("about_give", about)
-
-            console.log(name, file, about)
 
             $.ajax({
                 type: "POST",
@@ -211,12 +250,9 @@
     </div>
 </section>
 
-<div class="comment_list">
+<div class="comment_box">
     <h2>My Heart</h2>
-        <div class="flex-column">
-            <div class="card" style="background-color: #0dcaf0">
-
-            </div>
+        <div class="flex-column" id="like-list">
         </div>
 </div>
 </body>
