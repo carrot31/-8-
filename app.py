@@ -95,15 +95,12 @@ def sign_up():
 @app.route('/mypage/<username>')
 def user(username):
     # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
-    print(username)
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
         user_info = db.users.find_one({"username": payload['id']})
-
-        print(user_info)
 
         return render_template('mypage.html', user_info=user_info, status=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -142,14 +139,17 @@ def main():
     # 처음 보여줄 컨텐츠를 담은 api 주소 ( top artist )
     LAST_URL = "?method=chart.gettopartists&api_key=" + API_KEY + "&format=json"
     token_receive = request.cookies.get('mytoken')
+    print(token_receive)
     try:
+        if token_receive is None:
+            return redirect(url_for("login"))
+
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload['id']})
 
         r = requests.get(BASE_URL + LAST_URL)
         response = r.json()
         top_artist = response['artists']['artist']
-
 
         return render_template('main.html', user_info=user_info, artist=top_artist)
 
