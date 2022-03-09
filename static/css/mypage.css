@@ -191,8 +191,8 @@ text-align: center;
     display: inline-block;
     background-color: #ebf2ef;
     border-radius: 10px;
-    padding-bottom:1rem;
-    margin:100px auto;
+    padding-bottom: 1rem;
+    margin: 50px auto;
     min-width: 400px;
     box-shadow: 0 5px 18px -7px rgba(0, 0, 0, 1);
 }
@@ -221,15 +221,12 @@ text-align: center;
     max-width: 80%;
 }
 
-/* MY COMMENT */
-
-.mycomment {
+.comment_list {
     width: 800px;
     background: #ebf2ef;
     padding:30px;
     border-radius: 10px;
     margin: 0 auto;
-
 }
 
 .mycomment p {

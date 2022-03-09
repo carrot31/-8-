@@ -34,21 +34,38 @@
 </head>
 <body>
 
-    {# 헤더 #}
-    <div class="nav-bg">
-        <div class="flex-column brand_logo" onclick="location.href='/main'">
-            <h1>어디까지</h1>
-            <h1>들어봄?</h1>
+{# 헤더 #}
+<div class="nav-bg" style="justify-content: center">
+    <a href="/main">
+        <div class="logo-mini" style="margin-right: 30px">
+            <img class="logo" src="/static/public/logo_bk.png">
         </div>
-        <input id="find-keyword" class="detail_search" type="text" placeholder="Search...">
-        <button class="btn btn-dark-outline detail_btn" onclick="search()">검색</button>
+    </a>
+    <input id="find-keyword" class="detail_search" type="text" placeholder="Search...">
+    <button class="btn btn-dark-outline detail_btn" onclick="search()">검색</button>
+    <!-- 프로필 -->
+    <div class="flex-row">
+        <div class="flex-row">
+            <div class="image_box">
+                <a href="/mypage/{{ user_info.username }}">
+                    <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
+                </a>
+            </div>
+            <div class="profile-name">
+                <a href="/mypage/{{ user_info.username }}">
+                    <h3 class="profile-text">{{ user_info.profile_name }}</h3>
+                </a>
+            </div>
+        </div>
     </div>
+</div>
+
 
 {#    컨텐츠 #}
-    <div class="detail_content container">
-        <div class="flex-row">
-            <div class="flex-column info_box">
-                <img src={{ album["image"][3]["#text"] }}>
+<div class="detail_content container">
+    <div class="flex-row">
+        <div class="flex-column info_box">
+            <img src={{ album["image"][3]["#text"] }}>
             <div class="flex-column">
                 <div class="flex-row">
                     <h2>{{ a_name }}</h2>
@@ -61,64 +78,66 @@
                     {{ album["mbid"] }}
                 </div>
             </div>
-                <div class="flex-row">
+            <div class="flex-row">
                 {% for tag in album["tags"]["tag"] %}
                     <a href="{{ tag["url"] }}">#{{ tag["name"] }}</a>&nbsp;
                 {% endfor %}
-                </div>
             </div>
-            {% if album["tracks"] %}
+        </div>
+        {% if album["tracks"] %}
             <div class="track_list">
                 <table class="table table-responsive">
                     {% for track in album["tracks"]["track"] %}
                         {% set track_name = track["name"] %}
                         {% set url = track["url"] %}
-                        <tr><a href="{{ url }}">
+                        <tr>
                             <td>#</td>
-                            <td>{{ track_name }}</td>
-                            <td><ion-icon name="play-circle-outline"></ion-icon></td>
-                        </a></tr>
+                            <a href="{{ url }}"><td>{{ track_name }}</td></a>
+                            <td>
+                                <ion-icon name="play-circle-outline"></ion-icon>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </table>
             </div>
-                </div>
+            </div>
 
-            {% else %}
+        {% else %}
             <div class="exception_view">
                 <h4>API 에러</h4>
             </div>
-            {% endif %}
-        </div>
-    </div>
+        {% endif %}
+</div>
+</div>
 
+<div class="container">
+    <h3>코멘트</h3>
     <div class="container">
-        <h3>코멘트</h3>
-        <div class="container">
-            <table class="table table-hover">
-                <tr>
-                    <td>닉네임</td>
-                    <td>ㅎㅇㅎㅇ</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>닉네임</td>
-                    <td>ㅎㅇㅎㅇ</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
-            <div class="flex-row">
-                <input class="comment_input" type="text">
-                <button>작성</button>
-            </div>
+        <table class="table table-hover">
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="flex-row">
+            <input class="comment_input" type="text">
+            <button>작성</button>
         </div>
     </div>
+</div>
 
-    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+<script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
 </body>
 </html>

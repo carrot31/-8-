@@ -151,7 +151,12 @@ def main():
         response = r.json()
         top_artist = response['artists']['artist']
 
-        return render_template('main.html', user_info=user_info, artist=top_artist)
+        # DB 안에 있는 앨범, 아티스트, 이미지 리스트로 가져오기
+
+        myungban = list(db.myungban.find({}, {"_id": False}))
+
+        print(myungban)
+        return render_template('main.html', user_info=user_info, artist=top_artist, myungban=myungban)
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -183,15 +188,24 @@ def searchMain(keyword):
 # 앨범의 상세정보
 @app.route('/detail/<artist>/<album>')
 def detail(artist, album):
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload['id']})
 
-    LAST_URL = "?method=album.getinfo&artist=" + artist + "&album=" + album + "&api_key=" + API_KEY + "&format=json"
+        LAST_URL = "?method=album.getinfo&artist=" + artist + "&album=" + album + "&api_key=" + API_KEY + "&format=json"
 
-    r = requests.get(BASE_URL + LAST_URL)
-    response = r.json()
-    res_album = response["album"]
-    print(res_album)
+        r = requests.get(BASE_URL + LAST_URL)
+        response = r.json()
+        res_album = response["album"]
+        print(res_album)
 
-    return render_template('detail.html', album=res_album, a_name=album)
+        return render_template('detail.html', album=res_album, a_name=album, user_info=user_info)
+
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':

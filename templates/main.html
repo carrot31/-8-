@@ -51,30 +51,17 @@
 
 <!-- 하단 고정 navbar -->
 {% if keyword or msg %}
+    <br>
+{% else %}
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
         <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
             <a class="navbar-brand" href="#page-top"></a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#trend"></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#hidemb"></a></li>
-                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}">마이페이지</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-{% else %}
-    <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
-        <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
-            <a class="navbar-brand" href="#page-top">맨 위로</a>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto my-2 my-lg-0">
                     <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#hidemb">숨은명반</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}">마이페이지</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#hidemb">명반 추천</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}"></a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer"></a></li>
                 </ul>
             </div>
         </div>
@@ -82,7 +69,7 @@
 {% endif %}
 
 <div class="top_pos flex-column">
-            <!-- 프로필 -->
+    <!-- 프로필 -->
         <div class="profile">
             <div class="flex-row">
                 <div class="image_box profile_position">
@@ -144,11 +131,11 @@
         {% else %}
             <h3 class="sub_title" id="trend">Trending Artist</h3>
             <div class="album_list" id="show-content">
-                <div class="row m-5">
+                <div class="row row-cols-1 row-cols-md-5 m-5">
                     {% for row in artist %}
                         {% set name = row["name"] %}
                         {% set image = row["image"][2]["#text"] %}
-                        <div class="card" style="width: 20%">
+                        <div class="card">
                             <div class="flex-row">
                                 <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
                             </div>
@@ -159,52 +146,22 @@
                     {% endfor %}
                 </div>
             </div>
-            <h3 class="sub_title" id="hidemb">숨은 명반</h3>
+            <h3 class="sub_title" id="hidemb">명반 추천</h3>
             <div class="myungban">
-                <div class="row m-5">
+                <div class="row row-cols-1 row-cols-md-5 m-5">
                     {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
-                    <div class="card" style="width: 20%">
-                        <div class="flex-row">
-                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                    {% for m in myungban %}
+                        <div class="card">
+                            <div class="flex-row">
+                                <img src={{ m["cover"] }} alt="{{ m['album'] }}" style="max-width: 200px">
+                            </div>
+                            <div class="card-body flex-column">
+                                <h5 class="card-title">{{ m.artist }} - {{ m["album"] }}</h5>
+                                <p>추천자: {{ m["recommand"] }}</p>
+                            </div>
                         </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">더미더미</h5>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 20%">
-                        <div class="flex-row">
-                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                        </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">더미더미</h5>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 20%">
-                        <div class="flex-row">
-                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                        </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">더미더미</h5>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 20%">
-                        <div class="flex-row">
-                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                        </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">더미더미</h5>
-                        </div>
-                    </div>
-                    <div class="card" style="width: 20%">
-                        <div class="flex-row">
-                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                        </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">더미더미</h5>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
-
             </div>
         {% endif %}
     {% endif %}

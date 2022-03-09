@@ -11,10 +11,10 @@ body {
     margin-right: 30px;
 }
 
+
 .detail_search {
     outline: none;
     border: none;
-
     max-width: 500px;
     width: 35%;
     margin-top: 8px;
@@ -24,7 +24,6 @@ body {
     box-shadow: gray 1px 3px 3px;
 
     font-size: 18px;
-
 }
 
 .detail_btn {
@@ -37,10 +36,17 @@ body {
 
 .detail_content {
     margin: 30px auto;
+    width: 100%;
 }
 
 .info_box {
     margin-right: 50px;
+    width: 50%;
+}
+
+.track_list {
+    margin: 0 auto;
+    width: 50%;
 }
 
 .comment_input {
