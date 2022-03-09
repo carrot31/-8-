@@ -1,0 +1,56 @@
+body {
+    background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/static/public/title.png");
+    background-size: cover;
+}
+
+.main {
+    max-width: 500px;
+    width: 95%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin: 200px auto;
+}
+
+@font-face {
+    font-family: 'GilbeotRainbow';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/GilbeotRainbow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.btn > button {
+    width: 100px;
+    height: 40px;
+    margin-top: 30px;
+    color: white;
+
+    border: 2px solid white;
+    border-radius: 20px;
+    background-color: transparent;
+    font-family: 'GilbeotRainbow';
+    font-size: 20px;
+}
+
+.btn > button:hover {
+    background-color: #B9EA5C;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -50%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateZ(0);
+    }
+}
+
+.ani {
+    position: relative;
+    animation: fadeInDown 2s;
+}
