@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>상세 페이지</title>
+
+    <!--  font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+
+    <!--    JQuery -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+
+    <!--    BootStrap -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <!--    Custom -->
+    <link rel="stylesheet" href="/static/css/detail.css">
+
+    <script>
+        function search() {
+            const search = $('#find-keyword').val()
+            console.log(search)
+            if (search === "") return;
+            location.href = `/main/${search}`
+        }
+    </script>
+
+</head>
+<body>
+
+{# 헤더 #}
+<div class="nav-bg" style="justify-content: center">
+    <a href="/main">
+        <div class="logo-mini" style="margin-right: 30px">
+            <img class="logo" src="/static/public/logo_bk.png">
+        </div>
+    </a>
+    <input id="find-keyword" class="detail_search" type="text" placeholder="Search...">
+    <button class="btn btn-dark-outline detail_btn" onclick="search()">검색</button>
+    <!-- 프로필 -->
+    <div class="flex-row">
+        <div class="flex-row">
+            <div class="image_box">
+                <a href="/mypage/{{ user_info.username }}">
+                    <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
+                </a>
+            </div>
+            <div class="profile-name">
+                <a href="/mypage/{{ user_info.username }}">
+                    <h3 class="profile-text">{{ user_info.profile_name }}</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{#    컨텐츠 #}
+<div class="detail_content container">
+    <div class="flex-row">
+        <div class="flex-column info_box">
+            <img src={{ album["image"][3]["#text"] }}>
+            <div class="flex-column">
+                <div class="flex-row">
+                    <h2>{{ a_name }}</h2>
+                </div>
+                <div class="flex-row">
+                    <h3>{{ album["artist"] }}</h3>
+                </div>
+
+                <div class="flex-row">
+                    {{ album["mbid"] }}
+                </div>
+            </div>
+            <div class="flex-row">
+                {% for tag in album["tags"]["tag"] %}
+                    <a href="{{ tag["url"] }}">#{{ tag["name"] }}</a>&nbsp;
+                {% endfor %}
+            </div>
+        </div>
+        {% if album["tracks"] %}
+            <div class="track_list">
+                <table class="table table-responsive">
+                    {% for track in album["tracks"]["track"] %}
+                        {% set track_name = track["name"] %}
+                        {% set url = track["url"] %}
+                        <tr>
+                            <td>#</td>
+                            <a href="{{ url }}"><td>{{ track_name }}</td></a>
+                            <td>
+                                <ion-icon name="play-circle-outline"></ion-icon>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
+
+        {% else %}
+            <div class="exception_view">
+                <h4>API 에러</h4>
+            </div>
+        {% endif %}
+</div>
+</div>
+
+<div class="container">
+    <h3>코멘트</h3>
+    <div class="container">
+        <table class="table table-hover">
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>닉네임</td>
+                <td>ㅎㅇㅎㅇ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="flex-row">
+            <input class="comment_input" type="text">
+            <button>작성</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+</body>
+</html>
