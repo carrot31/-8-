@@ -9,6 +9,7 @@
 
     <!--  font -->
     <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/index.css">
 
     <!--    JQuery -->
     <script src="/static/js/jquery-3.6.0.min.js"></script>
@@ -17,6 +18,11 @@
     <!--    BootStrap -->
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
+
+    <!--    bulma 템플릿 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!--    Custom -->
     <link rel="stylesheet" href="/static/css/mypage.css">
@@ -59,7 +65,8 @@
             form_data.append("file_give", file)
             form_data.append("name_give", name)
             form_data.append("about_give", about)
-            console.log(name, file, about, form_data)
+
+            console.log(name, file, about)
 
             $.ajax({
                 type: "POST",
@@ -72,7 +79,6 @@
                     if (response["result"] == "success") {
                         alert(response["msg"])
                         window.location.reload()
-
                     }
                 }
             });
@@ -89,34 +95,36 @@
 
 <!-- HTML -->
 <body>
-<div class="header2">
-    <div class="inner">
-        <a class="logo" href="/">
-            {#                <img src="{{ url_for('static', filename='logo.png') }}">#}
-            <strong class="is-sparta"
-                    style="font-weight:700;, sans-serif;font-size: larger;">어디까지<br>들어봤니?</strong>
-        </a>
-    </div>
+
+<div class="nav-bg">
+    <a href="/main">
+        <div class="logo-mini">
+                <img class="logo" src="/static/public/logo_bk.png">
+        </div>
+    </a>
 </div>
 
 <div>
 </div>
 <section class="hero is-white">
     <div class="hero-body">
-
         <article class="media">
-
             <figure class="media-left" style=margin-left:30px;>
-                <a class="image is-96x96" href="#">
-                    <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
-                </a>
+                <div class="profile-img">
+                    <img style="width: 96px; height: 96px; object-fit: cover; border-radius: 70%" src="/static/public/{{ user_info.profile_pic_real }}">
+                </div>
             </figure>
             <div class="media-content">
                 <div class="content">
                     <p>
                         <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>
+                    <br>
                         <br>
-                        {{ user_info.profile_info }}
+                        {% if user_info.profile_info == "" %}
+                            <p>아직 소개가 없습니다.</p>
+                        {% else %}
+                            {{ user_info.profile_info }}
+                        {% endif %}
                     </p>
                 </div>
 
@@ -126,14 +134,12 @@
             <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
                 <a class="button level-item has-text-centered is-sparta" aria-label="edit"
                    onclick='$("#modal-edit").addClass("is-active")'>
-                    프로필 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"
-                                                                           aria-hidden="true"></i></span>
+                    프로필 수정&nbsp; &nbsp;<span class="icon is-small"><i class="fa fa-pencil" aria-hidden="true"></i></span>
                 </a>
 
                 <a class="button level-item has-text-centered is-sparta is-outlined" aria-label="logout"
                    onclick="sign_out()">
-                    로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out"
-                                                                         aria-hidden="true"></i></span>
+                    로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
                 </a>
             </nav>
 
@@ -175,7 +181,6 @@
                                     <label class="label" for="textarea-about">나는 누구?</label>
 
                                     <p class="control">
-
                                             <textarea id="textarea-about" class="textarea"
                                                       placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
                                     </p>

@@ -61,21 +61,6 @@ header > .logo {
     margin: auto;
 }
 
-.profile {
-    position: relative;
-    top: 30px;
-    margin: 0 auto;
-    float: right;
-
-}
-
-profile .profile-img {
-
-}
-
-.profile .profile-name {
-}
-
 .visual {
     margin: 0 auto;
     text-align: center;
@@ -142,7 +127,6 @@ margin: 50px 0 0 50px;
 
 .header2{
     background-image: url("/static/public/header.jpg");
-    /*display: fixed;*/
 }
 
 .header2 > .inner {
@@ -213,6 +197,11 @@ text-align: center;
     box-shadow: 0 5px 18px -7px rgba(0, 0, 0, 1);
 }
 
+.profile-img {
+    width: 96px;
+    height: 96px;
+    border-radius: 70%;
+}
 
 
 .button.is-sparta {

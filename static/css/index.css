@@ -4,7 +4,7 @@
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none!important;
 }
 
 .flex-row {
@@ -21,7 +21,6 @@ a {
     align-items: center;
 }
 
-
 .cover-bg {
     width: 100vw;
     height: 100vh;
@@ -29,4 +28,59 @@ a {
     background-position: center;
     background-size: cover;
     flex-direction: column;
+}
+
+.nav-bg {
+    width: 100vw;
+    height: 15vh;
+
+    background-image: url("/static/public/header.jpg");
+    background-position: center;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-mini {
+    width: 200px;
+    margin-left: 20px;
+}
+
+.logo-middle {
+    width: 370px;
+}
+
+.profile {
+    width: 100vw;
+}
+
+.profile_position {
+    position: relative!important;
+    left: calc(100vw / 3)
+}
+
+.profile-text {
+    font-weight: 700;
+    color: black;
+}
+
+.image_box {
+    width: 40px;
+    height: 40px;
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+.img_circle {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

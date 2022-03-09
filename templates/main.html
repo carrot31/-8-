@@ -19,11 +19,12 @@
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
 
+    <!--    bulma 쓰면 기존 만들어놓은 css 터져서 못쓸듯 -->
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">#}
+
     <link rel="stylesheet" href="/static/css/main.css">
 
-
     <script>
-
         {#$('#find-keyword').keypress((e) => {#}
         {#    if (e.which ===13) {#}
         {#        search();#}
@@ -44,75 +45,96 @@
             window.location.href = '/login'
         }
     </script>
+
 </head>
 <body id="page-top">
 
 <!-- 하단 고정 navbar -->
 {% if keyword or msg %}
-<nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
-    <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
-        <a class="navbar-brand" href="#page-top"></a>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#trend"></a></li>
-                <li class="nav-item"><a class="nav-link" href="#hidemb"></a></li>
-                <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["id"] }}">마이페이지</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
+        <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
+            <a class="navbar-brand" href="#page-top"></a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#trend"></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#hidemb"></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}">마이페이지</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
 {% else %}
-<nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
-    <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
-        <a class="navbar-brand" href="#page-top">맨 위로</a>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
-                <li class="nav-item"><a class="nav-link" href="#hidemb">숨은명반</a></li>
-                <li class="nav-item"><a class="nav-link" href="/mypage">마이페이지</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
+        <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
+            <a class="navbar-brand" href="#page-top">맨 위로</a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#trend">Trend</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#hidemb">숨은명반</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}">마이페이지</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer">로그아웃</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 {% endif %}
 
 <div class="top_pos flex-column">
-    <h1>어디까지</h1>
-    <h1>들어봤니?</h1>
+            <!-- 프로필 -->
+        <div class="profile">
+            <div class="flex-row">
+                <div class="image_box profile_position">
+                    <a href="/mypage/{{ user_info.username }}">
+                        <img class="img_circle" src="/static/public/{{ user_info.profile_pic_real }}">
+                    </a>
+                </div>
+                <div class="profile-name profile_position">
+                    <a href="/mypage/{{ user_info.username }}">
+                        <h3 class="profile-text">{{ user_info.profile_name }}</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <a href="/main">
+        <div class="logo-middle">
+                <img class="logo" src="/static/public/logo_bk.png">
+        </div>
+    </a>
     <br>
     <div class="flex-row search_box">
-        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요..." onkeypress="javascript:if(event.keyCode === 13) {search();}">
+        <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요..."
+               onkeypress="javascript:if(event.keyCode === 13) {search();}">
         <button class="btn btn-dark" onclick="search()">검색</button>
     </div>
+
 </div>
 
 <div class="bottom_pos" id="page-top" style="overflow: scroll">
     {% if keyword %}
         <h3 class="sub_title">검색결과: {{ keyword }}</h3>
 
-    <div class="album_list" id="search-result">
-        <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
-            {% for row in albums %}
-                {% if row["name"] != null %}
-                    {% set name = row["name"] %}
-                    {% set image = row["image"][2]["#text"] %}
-                    <a href="/detail/{{keyword}}/{{name|string}}">
-                        <div class="card pt-3">
-                            <div class="flex-row">
-                                <img src="{{ image }}" style="max-width: 200px;" alt="#">
+        <div class="album_list" id="search-result">
+            <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
+                {% for row in albums %}
+                    {% if row["name"] != null %}
+                        {% set name = row["name"] %}
+                        {% set image = row["image"][2]["#text"] %}
+                        <a href="/detail/{{ keyword }}/{{ name|string }}">
+                            <div class="card pt-3">
+                                <div class="flex-row">
+                                    <img src="{{ image }}" style="max-width: 200px;" alt="#">
+                                </div>
+                                <div class="card-body flex-column">
+                                    <h5 class="card-title">{{ name }}</h5>
+                                </div>
                             </div>
-                        <div class="card-body flex-column">
-                            <h5 class="card-title">{{ name }}</h5>
-                        </div>
-                    </div>
-                    </a>
-                {% endif %}
-            {% endfor %}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
 
     {% else %}
         {% if msg %}
@@ -120,12 +142,12 @@
                 <h3 style="margin-top: 50px">검색결과가 없습니다!</h3>
             </div>
         {% else %}
-    <h3 class="sub_title" id="trend">Trending Artist</h3>
-    <div class="album_list" id="show-content">
-        <div class="row m-5">
-            {% for row in artist %}
-                    {% set name = row["name"] %}
-                    {% set image = row["image"][2]["#text"] %}
+            <h3 class="sub_title" id="trend">Trending Artist</h3>
+            <div class="album_list" id="show-content">
+                <div class="row m-5">
+                    {% for row in artist %}
+                        {% set name = row["name"] %}
+                        {% set image = row["image"][2]["#text"] %}
                         <div class="card" style="width: 20%">
                             <div class="flex-row">
                                 <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
@@ -134,93 +156,59 @@
                                 <h5 class="card-title">{{ name }}</h5>
                             </div>
                         </div>
-            {% endfor %}
-        </div>
-    </div>
-    <h3 class="sub_title" id="hidemb">숨은 명반</h3>
-    <div class="myungban">
-        <div class="row m-5">
-{#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
-            <div class="card" style="width: 20%">
-                <div class="flex-row">
-                    <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                </div>
-                <div class="card-body flex-column">
-                    <h5 class="card-title">더미더미</h5>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="card" style="width: 20%">
-                <div class="flex-row">
-                    <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+            <h3 class="sub_title" id="hidemb">숨은 명반</h3>
+            <div class="myungban">
+                <div class="row m-5">
+                    {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
+                    <div class="card" style="width: 20%">
+                        <div class="flex-row">
+                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        </div>
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">더미더미</h5>
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20%">
+                        <div class="flex-row">
+                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        </div>
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">더미더미</h5>
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20%">
+                        <div class="flex-row">
+                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        </div>
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">더미더미</h5>
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20%">
+                        <div class="flex-row">
+                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        </div>
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">더미더미</h5>
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20%">
+                        <div class="flex-row">
+                            <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
+                        </div>
+                        <div class="card-body flex-column">
+                            <h5 class="card-title">더미더미</h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body flex-column">
-                    <h5 class="card-title">더미더미</h5>
-                </div>
-            </div>
-            <div class="card" style="width: 20%">
-                <div class="flex-row">
-                    <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                </div>
-                <div class="card-body flex-column">
-                    <h5 class="card-title">더미더미</h5>
-                </div>
-            </div>
-            <div class="card" style="width: 20%">
-                <div class="flex-row">
-                    <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                </div>
-                <div class="card-body flex-column">
-                    <h5 class="card-title">더미더미</h5>
-                </div>
-            </div>
-            <div class="card" style="width: 20%">
-                <div class="flex-row">
-                    <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
-                </div>
-                <div class="card-body flex-column">
-                    <h5 class="card-title">더미더미</h5>
-                </div>
-            </div>
-        </div>
 
-    </div>
+            </div>
         {% endif %}
     {% endif %}
 </div>
 
-{#    <div class="flex-column">#}
-{#        <div class="card" style="width: 50%">#}
-{#            <div class="card-header">#}
-{#                찾고자 하는 키워드를 입력하세요#}
-{#            </div>#}
-{#            <div class="card-body">#}
-{#                <h5 class="card-title">Special title treatment</h5>#}
-{#                <div class="d-flex justify-content-center align-items-center">#}
-{#                    <input id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요...">#}
-{##}
-{#                    <button class="btn btn-info-outline" onclick="search()">#}
-{#                        검색#}
-{#                    </button>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
-{#    카드형식 리스트 #}
-<div class="album_list">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="albums_box">
-        {#            <div class="col">#}
-        {#                <div class="card h-100">#}
-        {#                    <img src=${} class="card-img-top">#}
-        {#                    <div class="card-body">#}
-        {#                        <h5 class="card-title">제목제목</h5>#}
-        {#                        <p class="card-text">내용내용</p>#}
-        {#                        <p>내용2</p>#}
-        {#                        <p class="">코멘트?</p>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-
-    </div>
-</div>
 </body>
 </html>

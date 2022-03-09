@@ -95,12 +95,15 @@ def sign_up():
 @app.route('/mypage/<username>')
 def user(username):
     # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
+    print(username)
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
-        user_info = db.users.find_one({"username": username}, {"_id": False})
+        user_info = db.users.find_one({"username": payload['id']})
+
+        print(user_info)
 
         return render_template('mypage.html', user_info=user_info, status=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -124,16 +127,16 @@ def save_img():
             filename = secure_filename(file.filename)
             extension = filename.split(".")[-1]
             file_path = f"profile_pics/{username}.{extension}"
-            file.save("./static/"+file_path)
+            file.save("./static/public/"+file_path)
             new_doc["profile_pic"] = filename
             new_doc["profile_pic_real"] = file_path
         db.users.update_one({'username': payload['id']}, {'$set':new_doc})
         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+        return redirect(url_for("login.html"))
 
 
-# # 페이지 렌더링 (lastFM)
+# 페이지 렌더링 (lastFM)
 @app.route('/main')
 def main():
     # 처음 보여줄 컨텐츠를 담은 api 주소 ( top artist )
@@ -141,11 +144,12 @@ def main():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"id": payload['id']})
+        user_info = db.users.find_one({"username": payload['id']})
 
         r = requests.get(BASE_URL + LAST_URL)
         response = r.json()
         top_artist = response['artists']['artist']
+
 
         return render_template('main.html', user_info=user_info, artist=top_artist)
 
@@ -157,16 +161,24 @@ def main():
 # 검색 lastFM
 @app.route('/main/<keyword>')
 def searchMain(keyword):
-    r = requests.get(BASE_URL + "?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
-    response = r.json()
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload['id']})
 
-    print(response)
+        r = requests.get(
+            BASE_URL + "?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
+        response = r.json()
 
-    if 'error' in response.keys():
-        return render_template('main.html', msg="404")
-    else:
         albums = response["topalbums"]["album"]
-        return render_template('main.html', keyword=keyword, albums=albums)
+        return render_template('main.html', keyword=keyword, albums=albums, user_info=user_info)
+
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+
 
 # 앨범의 상세정보
 @app.route('/detail/<artist>/<album>')
