@@ -246,6 +246,14 @@ def detail(artist, album):
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+@app.route('/detail/<artist>/<album>/list', methods=["POST"])
+def detail_userList(artist, album):
+    album_receive = request.form["album_give"]
+
+    userList = list(db.myungban.find({'album': album_receive}, {'_id': False}))
+
+    return jsonify({"list": userList})
+
 
 @app.route('/detail/register', methods=['POST'])
 def myungban_regist():
