@@ -29,9 +29,47 @@
 
     <script>
 
+        $(document).ready(function () {
+            show_userList();
+        })
+
+        function show_userList() {
+            let artist = "{{ album.artist }}"
+            let album = "{{ album.name }}"
+            let encodeAlbum = ""
+
+            /* HTML 특수문자 치환 */
+            const element = document.createElement('div')
+            element.innerHTML = album
+            encodeAlbum = element.textContent
+
+            $.ajax({
+                type: "POST",
+                url: `/detail/${artist}/${encodeAlbum}/list`,
+                data: {album_give: album},
+                success: function (response) {
+                    const rows = response["list"]
+                    let temp_html = `<h4>아직 이 앨범을 추천한 사람이 없습니다.</h4>`
+
+                    if(rows.length === 0) {
+                        $('#user-list').append(temp_html)
+                    } else {
+                        for(let i=0; i<rows.length; i++) {
+                            const user = rows[i]["recommand"]
+                            temp_html = `
+                                <div class="btn" style="cursor: default">
+                                    <button>${user}</button>
+                                </div>
+                            `
+                            $('#user-list').append(temp_html)
+                        }
+                    }
+                }
+            })
+        }
+
         function search() {
             const search = $('#find-keyword').val()
-            console.log(search)
             if (search === "") return;
             location.href = `/main/${search}`
         }
@@ -39,12 +77,11 @@
         function registerAlbum() {
             const isRegist = confirm("해당 앨범을 명반으로 등록하시겠습니까?")
             if (isRegist) {
-                let album = "{{ a_name }}",
+                let album = "{{ album["name"] }}",
                     artist = "{{ album["artist"] }}",
                     cover = "{{ album["image"][3]["#text"] }}",
                     username = "{{ user_info.username }}";
 
-                console.log(album, artist, cover, username)
                 $.ajax({
                     type: "POST",
                     url: "/detail/register",
@@ -96,16 +133,12 @@
     <div class="flex-row detail_content">
         <div class="flex-column info_box">
             <img src={{ album["image"][3]["#text"] }}>
-            <div class="flex-column">
-                <div class="flex-row">
-                    <h2>{{ a_name }}</h2>
+            <div class="flex-column info-box">
+                <div class="flex-row info">
+                    {{ a_name }}
                 </div>
-                <div class="flex-row">
-                    <h3>{{ album["artist"] }}</h3>
-                </div>
-
-                <div class="flex-row">
-                    {{ album["mbid"] }}
+                <div class="flex-row info">
+                    {{ album["artist"] }}
                 </div>
             </div>
             <div class="flex-row">
@@ -120,9 +153,9 @@
                     {% for track in album["tracks"]["track"] %}
                         {% set track_name = track["name"] %}
                         {% set url = track["url"] %}
-                        <tr>
-                            <td>#</td>
-                            <a href="{{ url }}"><td>{{ track_name }}</td></a>
+                        <tr onclick="window.open('{{ url }}')">
+                            <td>{{ loop.index }}</td>
+                            <td>{{ track_name }}</td>
                             <td>
                                 <ion-icon name="play-circle-outline"></ion-icon>
                             </td>
@@ -130,54 +163,29 @@
                     {% endfor %}
                 </table>
             </div>
+
         {% else %}
             <div class="exception_view">
                 <h4>API 에러</h4>
             </div>
         {% endif %}
-    </div>
+  </div>
 </div>
 
-<div class="flex-column" style="background-color: tomato">
-    <button onclick="registerAlbum()">명반 등록</button>
+<div class="flex-row recommend">
+    <button onclick="registerAlbum()">
+        <i class="fa fa-heart" aria-hidden="true"></i>
+        명반 등록
+    </button>
 </div>
-
 <div class="comment_box">
-    <h2>Comment List</h2>
+    <h2>이 앨범을 추천한사람</h2>
         <div class="flex-column">
-            <div class="flex-row">
-                <p>닉네임</p>
-                <p>ㅁㄴㅇㄻㄴㅇㄹ</p>
+            <div class="comment_list">
+                <div class="flex-row user_list" id="user-list">
+                </div>
             </div>
         </div>
-</div>
-
-<div class="container">
-    <h3>코멘트</h3>
-    <div class="container">
-        <table class="table table-hover">
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-        <div class="flex-row">
-            <input class="comment_input" type="text">
-            <button>작성</button>
-        </div>
-    </div>
 </div>
 
 <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>

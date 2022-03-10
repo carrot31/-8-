@@ -10,6 +10,11 @@
     <!--  font -->
     <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
     <link href="/static/css/index.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic+Coding:wght@700&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
 
     <!--    JQuery -->
     <script src="/static/js/jquery-3.6.0.min.js"></script>
@@ -19,12 +24,59 @@
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
     <script src="/static/js/bootstrap/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="/static/css/main.css">
-
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
 
     <script>
+        $(document).ready(function () {
+            show_myungban();
+        })
+
+        function show_myungban() {
+            const myungban = "{{ myungban }}"
+            console.log(myungban)
+
+            $.ajax({
+                type: "GET",
+                url: "/main/showmb",
+                data: {},
+                success: function (response) {
+                    let rows = response["list"]
+                    let temp_html = ``
+
+                    for (let i=0; i<rows.length; i++) {
+                        const album = rows[i]["album"]
+                        const artist = rows[i]["artist"]
+                        const cover = rows[i]["cover"]
+                        const username = rows[i]["recommand"]
+
+                        console.log(`${album}`)
+
+                        temp_html = `
+                                <a href="/detail/${artist}/${album}">
+                                    <div class="card">
+                                        <div class="flex-row">
+                                            <img src=${cover} alt=${album} style="max-width: 200px; width: 100%">
+                                        </div>
+                                        <div class="card-body">
+                                            <div>
+                                                <h7 class="card-title">${artist}</h7>
+                                            </div>
+                                            <div>
+                                                <h7>${album}</h7>
+                                            </div>
+                                            <p>추천인: ${username}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                        `
+                        $('#show-myungban').append(temp_html)
+                    }
+                }
+            })
+        }
+
         function search() {
             const search = $('#find-keyword').val()
             console.log(search)
@@ -38,23 +90,22 @@
             alert('로그아웃!')
             location.href = '/login'
         }
+
     </script>
 
 </head>
 <body>
 <!-- 하단 고정 navbar -->
 {% if keyword or msg %}
-    {# 검색하면 없어지게 #}
+     {# 검색하면 없어지게 #}
 {% else %}
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light py-3" id="mainNav">
         <div class="container px-5 px-lg-5" style="font-size: 1.5rem">
             <a class="navbar-brand" href="#page-top"></a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#hidemb">명반 추천</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#trend">Trend Artist</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/mypage/{{ user_info["username"] }}"></a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="logout()" style="cursor: pointer"></a></li>
+                    <li class="nav-item-1"><a class="nav-link" href="#hidemb">명반 추천</a></li>
+                    <li class="nav-item-1"><a class="nav-link" href="#trend">Trend Artist</a></li>
                 </ul>
             </div>
         </div>
@@ -79,26 +130,25 @@
     </div>
     <a href="/main">
         <div class="logo-middle">
-            <img class="logo" src="/static/public/logo_bk.png">
+            <img class="logo" src="/static/public/logo_wh.png">
         </div>
     </a>
     <br>
     <div class="flex-row search_box">
         <input class="search_bar" id="find-keyword" type="text" name="findKeyword" placeholder="입력하세요..."
                onkeypress="javascript:if(event.keyCode === 13) {search();}">
-        <button class="btn btn-dark" onclick="search()">검색</button>
+        <button class="btn" onclick="search()">검색</button>
     </div>
 
 </div>
 
-<div class="bottom_pos" id="page-top" style="overflow: scroll">
+<div class="bottom_pos" style="overflow: scroll">
     {% if keyword %}
         <h3 class="sub_title">검색결과: {{ keyword }}</h3>
-
+        {% if albums.topalbums %}
         <div class="album_list" id="search-result">
             <div class="row row-cols-1 row-cols-md-5 m-5">
-                {% for row in albums %}
-                    {% if row["name"] != null %}
+                {% for row in albums["topalbums"]["album"] %}
                         {% set name = row["name"] %}
                         {% set image = row["image"][2]["#text"] %}
                         <a href="/detail/{{ keyword }}/{{ name|string }}">
@@ -111,34 +161,19 @@
                                 </div>
                             </div>
                         </a>
-                    {% endif %}
                 {% endfor %}
             </div>
-        </div>
-
-    {% else %}
-        {% if msg %}
+        {% else %}
             <div class="flex-column">
                 <h3 style="margin-top: 50px">검색결과가 없습니다!</h3>
             </div>
+        </div>
+        {% endif %}
+
         {% else %}
             <h3 class="sub_title" id="hidemb">명반 추천</h3>
             <div class="myungban">
-                <div class="row row-cols-1 row-cols-md-5 m-5">
-                    {#        DB에 저장돼있는거 끌어와서 넣기    {% for  %}#}
-                    {% for m in myungban %}
-                        <a href="/detail/{{ m.artist }}/{{ m.album }}">
-                            <div class="card">
-                                <div class="flex-row">
-                                    <img src={{ m["cover"] }} alt="{{ m['album'] }}" style="max-width: 200px; width: 100%">
-                                </div>
-                                <div class="card-body flex-column">
-                                    <h5 class="card-title">{{ m.artist }} - {{ m["album"] }}</h5>
-                                    <p>추천인: {{ m["recommand"] }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
+                <div class="row row-cols-1 row-cols-md-5 m-5" id="show-myungban">
                 </div>
             </div>
             <h3 class="sub_title" id="trend">Trending Artist</h3>
@@ -158,7 +193,6 @@
                     {% endfor %}
                 </div>
             </div>
-        {% endif %}
     {% endif %}
 </div>
 

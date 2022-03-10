@@ -122,7 +122,6 @@ def user(username):
 def show_list(username):
 
     like_list = list(db.myungban.find({'recommand': username}, {'_id': False}))
-    print(like_list)
     if like_list is None:
         return jsonify({"msg": "아직 추천한 앨범이 없습니다."})
     else:
@@ -173,16 +172,22 @@ def main():
         response = r.json()
         top_artist = response['artists']['artist']
 
-        # DB 안에 있는 앨범, 아티스트, 이미지 리스트로 가져오기
-
-        myungban = list(db.myungban.find({}, {"_id": False}))
-
-        return render_template('main.html', user_info=user_info, artist=top_artist, myungban=myungban)
+        return render_template('main.html', user_info=user_info, artist=top_artist)
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+@app.route('/main/showmb')
+def show_mb():
+    # DB 안에 있는 앨범, 아티스트, 이미지 리스트로 가져오기
+    myungban = list(db.myungban.find({}, {"_id": False}))
+
+    if len(myungban) != 0:
+        return jsonify({"list": myungban})
+    else:
+        return jsonify({"msg": "아직 등록된 명반이 없습니다."})
 
 # 검색 lastFM
 @app.route('/main/<keyword>')
@@ -196,15 +201,14 @@ def searchMain(keyword):
             BASE_URL + "?method=artist.gettopalbums&artist=" + keyword + "&api_key=" + API_KEY + "&format=json")
         response = r.json()
 
-        albums = response["topalbums"]["album"]
+        albums = response
+        print(albums)
         return render_template('main.html', keyword=keyword, albums=albums, user_info=user_info)
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
-
 
 # 앨범의 상세정보
 @app.route('/detail/<artist>/<album>')
@@ -219,14 +223,20 @@ def detail(artist, album):
         r = requests.get(BASE_URL + LAST_URL)
         response = r.json()
         res_album = response["album"]
-        print(res_album)
-
         return render_template('detail.html', album=res_album, a_name=album, user_info=user_info)
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+@app.route('/detail/<artist>/<album>/list', methods=["POST"])
+def detail_userList(artist, album):
+    album_receive = request.form["album_give"]
+
+    userList = list(db.myungban.find({'album': album_receive}, {'_id': False}))
+
+    return jsonify({"list": userList})
 
 @app.route('/detail/register', methods=['POST'])
 def myungban_regist():
@@ -258,10 +268,6 @@ def myungban_regist():
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
-
-
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

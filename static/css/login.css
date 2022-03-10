@@ -1,8 +1,10 @@
 body {
     background-image: url("/static/public/header.jpg");
+    background-size: cover;
     min-height: 100vh;
     background-position: center;
     background-size: cover;
+
 }
 
 .section {
@@ -16,6 +18,7 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-top:40px;
 }
 
 .title_box > img {
@@ -23,14 +26,18 @@ body {
 }
 
 .subtitle {
-    font-size: 1.8rem;
-    font-family: 'LeferiPoint-WhiteObliqueA';
+    font-size: 3rem;
+    font-family: 'Dongle', sans-serif;
+    font-weight: 700;
 }
+
 
 .is-sparta {
-    color: darkslateblue !important;
+    color: #2a493c; !important;
 }
-
+.button {
+    font-weight: 700;
+}
 .button.is-sparta {
     background-color: #50b5b0;
     border-color: transparent;
@@ -46,6 +53,7 @@ body {
 .help {
     color: gray;
 }
+
 /* star css & animation */
 .fa-music {
   position: absolute;
@@ -54,33 +62,33 @@ body {
 }
 
 .music1 {
-  top: 50px;
+  top: 70px;
   left: 400px;
   animation: music-one 2s infinite;
 }
 
 .music2 {
-  top: 20px;
+  top: 30px;
   right: 480px;
   animation: music-two 1.6s infinite;
 }
 
 .music3 {
-  top: 160px;
+  top: 190px;
   left: 480px;
-  font-size: 12px;
+  font-size: 15px;
   animation: music-three 1.8s infinite;
 }
 
 .music4 {
-  top: 150px;
+  top: 160px;
   right: 430px;
   font-size: 7px;
   animation: music-five 1.5s infinite;
 }
 
 .music5 {
-  top: 200px;
+  top: 250px;
   right: 500px;
   font-size: 20px;
   animation: music-five 2s infinite;
