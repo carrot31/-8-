@@ -135,17 +135,6 @@ text-align: center;
     text-align: center;
 }
 
-
-/*.card {*/
-/*    width:300px;*/
-/*    display: flex;*/
-/*    position: relative;*/
-/*    text-align: center;*/
-/*    justify-content: space-between;*/
-/*    margin: 10px 0;*/
-
-/*}*/
-
 .card {
     border: none;
     outline: none;

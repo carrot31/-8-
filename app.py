@@ -171,6 +171,7 @@ def main():
         r = requests.get(BASE_URL + LAST_URL)
         response = r.json()
         top_artist = response['artists']['artist']
+        print(top_artist)
 
         return render_template('main.html', user_info=user_info, artist=top_artist)
 
@@ -202,7 +203,6 @@ def searchMain(keyword):
         response = r.json()
 
         albums = response
-        print(albums)
         return render_template('main.html', keyword=keyword, albums=albums, user_info=user_info)
 
     except jwt.ExpiredSignatureError:
