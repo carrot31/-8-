@@ -22,13 +22,44 @@
     <!--    Custom -->
     <link rel="stylesheet" href="/static/css/detail.css">
 
+     <!--    bulma 템플릿 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
     <script>
+
         function search() {
             const search = $('#find-keyword').val()
             console.log(search)
             if (search === "") return;
             location.href = `/main/${search}`
         }
+
+        function registerAlbum() {
+            const isRegist = confirm("해당 앨범을 명반으로 등록하시겠습니까?")
+            if (isRegist) {
+                let album = "{{ a_name }}",
+                    artist = "{{ album["artist"] }}",
+                    cover = "{{ album["image"][3]["#text"] }}",
+                    username = "{{ user_info.username }}";
+                console.log(album, artist, cover, username)
+                $.ajax({
+                    type: "POST",
+                    url: "/detail/register",
+                    data: {
+                        album_give: album,
+                        artist_give: artist,
+                        cover_give: cover,
+                        username_give: username
+                    },
+                    success: function (response) {
+                        alert(response["msg"])
+                    }
+                })
+            }
+        }
+
     </script>
 
 </head>
@@ -60,10 +91,9 @@
     </div>
 </div>
 
-
 {#    컨텐츠 #}
 <div class="detail_content container">
-    <div class="flex-row">
+    <div class="flex-row detail_content">
         <div class="flex-column info_box">
             <img src={{ album["image"][3]["#text"] }}>
             <div class="flex-column">
@@ -100,14 +130,27 @@
                     {% endfor %}
                 </table>
             </div>
-            </div>
 
         {% else %}
             <div class="exception_view">
                 <h4>API 에러</h4>
             </div>
         {% endif %}
+  </div>
 </div>
+
+<div class="flex-column" style="background-color: tomato">
+    <button onclick="registerAlbum()">명반 등록</button>
+</div>
+
+<div class="comment_box">
+    <h2>Comment List</h2>
+    <div class="flex-column">
+        <div class="flex-row">
+            <p>닉네임</p>
+            <p>ㅁㄴㅇㄻㄴㅇㄹ</p>
+        </div>
+    </div>
 </div>
 
 <div class="container">

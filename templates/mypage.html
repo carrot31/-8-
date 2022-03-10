@@ -9,9 +9,6 @@
 
     <!--  font -->
     <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Poor+Story&display=swap" rel="stylesheet">
-    <!-- Google web font -->
-    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
-          rel="stylesheet">
     <link rel="stylesheet" href="/static/css/index.css">
 
     <!--    JQuery -->
@@ -43,8 +40,11 @@
                 url: `/mypage/${username}/list`,
                 data: {},
                 success: function (response) {
-                    if (response["msg"]) {
-
+                    console.log(response['list'])
+                    let temp_html= " "
+                    if (response["list"].length === 0) {
+                        temp_html = `<h4>아직 추천할 앨범이 없습니다.</h4>`
+                        $('#like-list').append(temp_html)
                     } else {
                         const rows = response["list"]
 
@@ -55,14 +55,13 @@
 
                             let temp_html = `
                                 <a href="/detail/${artist}/${album}">
-                                    <div class="row row-cols-2 row-cols-md-1 m-1">
                                     <div class="card">
                                         <div class="flex-row">
                                             <img src=${cover} alt=${album} style="max-width: 200px; width: 100%">
                                         </div>
                                         <div class="card-body flex-column">
-                                            <h5 class="card-title">${artist} - ${album}</h5>
-                                        </div>
+                                            <h7 class="card-title">${artist}</h7>
+                                            <h7>${album}</h7>
                                         </div>
                                     </div>
                                 </a>
@@ -73,35 +72,6 @@
                 }
             })
         }
-
-        function logout() {
-            $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃!')
-            window.location.href = '/main'
-        }
-
-        <!-- search bar 애니메이션 -->
-        const searchEl = document.querySelector('.search');
-        const searchInputEl = searchEl.querySelector('input');
-
-        searchEl.addEventListener('click', function () {
-            //Logic..
-            searchInputEl.focus();
-        });
-
-        searchInputEl.addEventListener('focus', function () {
-            searchEl.classList.add("focused");
-            searchInputEl.setAttribute('placeholder', '통합검색');
-        });
-
-        searchInputEl.addEventListener('blur', function () {
-            searchEl.classList.remove("focused");
-            searchInputEl.setAttribute('placeholder', '');
-        });
-
-        $(document).ready(function () {
-            get_posts("{{ user_info.username }}")
-        })
 
         function update_profile() {
             let name = $('#input-name').val()
@@ -128,6 +98,7 @@
             });
         }
 
+
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -139,32 +110,30 @@
 
 <!-- HTML -->
 <body>
-<header>
-    <div class="nav-bg">
-        <a href="/main">
-            <div class="logo-mini">
-                <img class="logo" src="/static/public/logo_wh.png">
-            </div>
-        </a>
-    </div>
-</header>
-<div>
+
+<div class="nav-bg">
+    <a href="/main">
+        <div class="logo-mini">
+                <img class="logo" src="/static/public/logo_bk.png">
+        </div>
+    </a>
 </div>
 
+<div>
+</div>
 <section class="hero is-white">
     <div class="hero-body">
         <article class="media">
             <figure class="media-left" style=margin-left:30px;>
                 <div class="profile-img">
-                    <img style="width: 96px; height: 96px; object-fit: cover; border-radius: 70%"
-                         src="/static/public/{{ user_info.profile_pic_real }}">
+                    <img style="width: 96px; height: 96px; object-fit: cover; border-radius: 70%" src="/static/public/{{ user_info.profile_pic_real }}">
                 </div>
             </figure>
             <div class="media-content">
                 <div class="content">
                     <p>
                         <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>
-                        <br>
+                    <br>
                         <br>
                         {% if user_info.profile_info == "" %}
                             <p>아직 소개가 없습니다.</p>
@@ -180,11 +149,10 @@
             <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
                 <a class="button level-item has-text-centered is-sparta" aria-label="edit"
                    onclick='$("#modal-edit").addClass("is-active")'>
-                    프로필 수정&nbsp; &nbsp;<span class="icon is-small"><i class="fa fa-pencil"
-                                                                      aria-hidden="true"></i></span>
+                    프로필 수정&nbsp; &nbsp;<span class="icon is-small"><i class="fa fa-pencil" aria-hidden="true"></i></span>
                 </a>
 
-                <a class="button level-item has-text-centered is-sparta" aria-label="logout"
+                <a class="button level-item has-text-centered is-sparta is-outlined" aria-label="logout"
                    onclick="sign_out()">
                     로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
                 </a>
@@ -258,12 +226,9 @@
     </div>
 </section>
 
-
-<div class="comment">
-    <h2>My Heart</h2>
-</div>
 <div class="comment_box">
-    <div class="flex-column" id="like-list">
+    <h2>My Heart</h2>
+    <div class="flex-row" id="like-list">
     </div>
 </div>
 </body>
