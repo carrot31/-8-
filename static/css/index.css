@@ -1,7 +1,9 @@
-/** {*/
-/*   font-family: 'Dongle', sans-serif;*/
-/*    font-family: 'Noto Sans KR', sans-serif;*/
-/*}*/
+@font-face {
+    font-family: 'LeferiPoint-BlackA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 a {
     text-decoration: none!important;
@@ -34,7 +36,7 @@ a {
     width: 100vw;
     height: 15vh;
 
-    background-image: url("/static/");
+    background-image: url("/static/public/header.jpg");
     background-position: center;
     background-size: cover;
 
