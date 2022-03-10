@@ -1,13 +1,9 @@
-* {
-    font-family: 'Dongle', sans-serif;
-    font-family: 'Noto Sans KR', sans-serif;
-
-}
-
 body {
     background-image: url("/static/public/header.jpg");
     background-size: cover;
     min-height: 100vh;
+    background-position: center;
+    background-size: cover;
 
 }
 
@@ -66,33 +62,33 @@ body {
 }
 
 .music1 {
-  top: 50px;
+  top: 70px;
   left: 400px;
   animation: music-one 2s infinite;
 }
 
 .music2 {
-  top: 20px;
+  top: 30px;
   right: 480px;
   animation: music-two 1.6s infinite;
 }
 
 .music3 {
-  top: 160px;
+  top: 190px;
   left: 480px;
-  font-size: 12px;
+  font-size: 15px;
   animation: music-three 1.8s infinite;
 }
 
 .music4 {
-  top: 150px;
+  top: 160px;
   right: 430px;
   font-size: 7px;
   animation: music-five 1.5s infinite;
 }
 
 .music5 {
-  top: 200px;
+  top: 250px;
   right: 500px;
   font-size: 20px;
   animation: music-five 2s infinite;

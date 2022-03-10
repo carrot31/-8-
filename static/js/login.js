@@ -18,6 +18,7 @@ function sign_in() {
     } else {
         $("#help-password-login").text("")
     }
+
     $.ajax({
         type: "POST",
         url: "/sign_in",

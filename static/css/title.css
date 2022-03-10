@@ -16,7 +16,8 @@ body {
 }
 
 @font-face {
-    font-family: 'GilbeotRainbow';
+    font-family: Helvetica, sans-serif;
+    font-weight: bold;
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/GilbeotRainbow.woff') format('woff');
     font-weight: normal;
     font-style: normal;
@@ -36,7 +37,8 @@ body {
 }
 
 .btn > button:hover {
-    background-color: #B9EA5C;
+    background-color: #50b5b0;
+    cursor: pointer;
 }
 
 @keyframes fadeInDown {
