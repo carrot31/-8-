@@ -64,23 +64,22 @@
                         const cover = rows[i]["cover"]
                         const username = rows[i]["recommand"]
 
-                        temp_html = `
-                                <a href="/detail/${artist}/${album}">
-                                    <div class="card">
-                                        <div class="flex-row">
-                                            <img src=${cover} alt=${album} style="max-width: 200px; width: 100%">
-                                        </div>
-                                        <div class="card-body">
-                                            <div>
-                                                <h7 class="card-title">${artist}</h7>
+                        temp_html = `<a href="/detail/${artist}/${album}">
+                                        <div class="card">
+                                            <div class="flex-row">
+                                                <img src=${cover} alt=${album} style="max-width: 200px; width: 100%">
                                             </div>
-                                            <div>
-                                                <h7>${album}</h7>
+                                            <div class="card-body">
+                                                <div>
+                                                    <h7 class="card-title">${artist}</h7>
+                                                </div>
+                                                <div>
+                                                    <h7>${album}</h7>
+                                                </div>
+                                                <p>추천인: ${username}</p>
                                             </div>
-                                            <p>추천인: ${username}</p>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
                         `
                         $('#show-myungban').append(temp_html)
                     }
@@ -189,7 +188,7 @@
                                 <img src={{ image }} alt="{{ name }}" style="max-width: 200px">
                             </div>
                             <div class="card-body flex-column">
-                                <h5 class="card-title">{{ name }}</h5>
+                                <h7 class="card-title">{{ name }}</h7>
                             </div>
                         </div>
                     {% endfor %}

@@ -60,6 +60,43 @@
             }
         }
 
+        $(document).ready(function () {
+            show_userList();
+        })
+
+        function show_userList() {
+            let artist = "{{ album.artist }}"
+            let album = "{{ album.name }}"
+            let encodeAlbum = ""
+
+            /* HTML 특수문자 치환 */
+            const element = document.createElement('div')
+            element.innerHTML = album
+            encodeAlbum = element.textContent
+            console.log(encodeAlbum)
+            console.log(album)
+            $.ajax({
+                type: "POST",
+                url: `/detail/${artist}/${encodeAlbum}/list`,
+                data: {album_give: album},
+                success: function (response) {
+                    const rows = response["list"]
+                    let temp_html = `<h4>아직 이 앨범을 추천한 사람이 없습니다.</h4>`
+
+                    if(rows.length === 0) {
+                        $('#user-list').append(temp_html)
+                    } else {
+                        for(let i=0; i<rows.length; i++) {
+                            const user = rows[i]["recommand"]
+                            console.log(user)
+                            temp_html = `<li>${user}</li>`
+                            $('#user-list').append(temp_html)
+                        }
+                    }
+                }
+            })
+        }
+
     </script>
 
 </head>
@@ -96,16 +133,12 @@
     <div class="flex-row detail_content">
         <div class="flex-column info_box">
             <img src={{ album["image"][3]["#text"] }}>
-            <div class="flex-column">
-                <div class="flex-row">
-                    <h2>{{ a_name }}</h2>
+            <div class="flex-column info-box">
+                <div class="flex-row info">
+                    {{ a_name }}
                 </div>
-                <div class="flex-row">
-                    <h3>{{ album["artist"] }}</h3>
-                </div>
-
-                <div class="flex-row">
-                    {{ album["mbid"] }}
+                <div class="flex-row info">
+                    {{ album["artist"] }}
                 </div>
             </div>
             <div class="flex-row">
@@ -139,46 +172,22 @@
   </div>
 </div>
 
-<div class="flex-column" style="background-color: tomato">
-    <button onclick="registerAlbum()">명반 등록</button>
+<div class="flex-row recommend">
+    <button onclick="registerAlbum()">
+        <i class="fa fa-heart" aria-hidden="true"></i>
+        명반 등록
+    </button>
 </div>
+
 
 <div class="comment_box">
-    <h2>Comment List</h2>
-    <div class="flex-column">
-        <div class="flex-row">
-            <p>닉네임</p>
-            <p>ㅁㄴㅇㄻㄴㅇㄹ</p>
+    <h2>이 앨범을 추천한사람</h2>
+        <div class="flex-column">
+            <div class="comment_list">
+                <ul class="user_list" id="user-list">
+                </ul>
+            </div>
         </div>
-    </div>
-</div>
-
-<div class="container">
-    <h3>코멘트</h3>
-    <div class="container">
-        <table class="table table-hover">
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>닉네임</td>
-                <td>ㅎㅇㅎㅇ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-        <div class="flex-row">
-            <input class="comment_input" type="text">
-            <button>작성</button>
-        </div>
-    </div>
 </div>
 
 <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
